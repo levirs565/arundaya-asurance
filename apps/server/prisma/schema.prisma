@@ -1,0 +1,96 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum AccountType {
+  ADMIN
+  EMPLOYEE
+  USER
+}
+
+model Account {
+  id           String      @id
+  passwordHash String
+  name         String
+  type         AccountType
+  user         User?
+  employee     Employee?
+}
+
+enum UserClass {
+  A
+  B
+  C
+}
+
+model User {
+  nik               String    @id
+  accountId         String    @unique
+  account           Account   @relation(fields: [accountId], references: [id])
+  bithDate          DateTime
+  job               String
+  income            Int
+  motherName        String
+  subscriptionClass UserClass
+  claims            Claim[]
+  premis            Premi[]
+}
+
+enum Day {
+  Sunday
+  Monday
+  Tuesday
+  Wednesday
+  Thursday
+  Friday
+  Saturday
+}
+
+model Employee {
+  id        String   @id
+  account   Account  @relation(fields: [id], references: [id])
+  startDay  Day
+  startTime DateTime @db.Time()
+  endDay    Day
+  endTime   DateTime @db.Time()
+}
+
+enum ClaimState {
+  NOT_ASSIGNED
+  ASSIGNED
+  ACCEPTED
+  REJECTED
+}
+
+model Claim {
+  id                 Int      @id @default(autoincrement())
+  date               DateTime
+  userNik            String
+  user               User     @relation(fields: [userNik], references: [nik])
+  assignedEmployeeId String?
+
+  description String
+  hospital    String
+  type        String
+  state       ClaimState
+}
+
+enum PremiState {
+  PENDING
+  FAIL
+  SUCCESS
+}
+
+model Premi {
+  id      Int        @id @default(autoincrement())
+  date    DateTime
+  userNik String
+  user    User       @relation(fields: [userNik], references: [nik])
+  amount  Int
+  state   PremiState
+}
