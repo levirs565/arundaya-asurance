@@ -42,7 +42,7 @@ export class ClaimService {
             where: { id }
         })
 
-        if(!claim){
+        if (!claim) {
             throw new HttpException("Claim tidak ditemukan!", HttpStatus.NOT_FOUND);
         }
 
@@ -71,12 +71,38 @@ export class ClaimService {
         const claim = await this.prismaClient.claim.findUnique({
             where: { id }
         })
-        if(!claim){
+        if (!claim) {
             throw new HttpException("Claim tidak ditemukan!", HttpStatus.NOT_FOUND);
         }
         if (claim.userNik != session.account.nik) {
             throw new CommonServiceException("Anda bukan pemilik claim!")
         }
         return claim;
+    }
+
+    async edit(session: SessionData, id: number, description: string, hospital: string, type: string) {
+        validateAccountLoggedIn(session)
+
+        const claim = await this.prismaClient.claim.findUnique({
+            where: { id }
+        });
+
+        if (!claim) {
+            throw new HttpException("Claim tidak ditemukan!", HttpStatus.NOT_FOUND);
+        }
+
+        if (claim.userNik != session.account.nik) {
+            throw new CommonServiceException("Anda bukan pemilik claim!")
+        }
+
+        // TODO: Add last edit time
+        await this.prismaClient.claim.update({
+            where: {id},
+            data: {
+                description,
+                hospital,
+                type
+            }
+        })
     }
 }
