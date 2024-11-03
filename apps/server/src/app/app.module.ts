@@ -7,16 +7,22 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { RouterModule } from '@nestjs/core';
 import { AccountModule } from '../account/account.module';
 import { PrismaModule } from '../prisma/prisma.module';
+import { ClaimModule } from '../claim/claim.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
     PrismaModule,
     AccountModule,
+    ClaimModule,
     RouterModule.register([
       {
         path: "account",
         module: AccountModule
+      },
+      {
+        path: "claim",
+        module: ClaimModule
       }
     ])
   ],

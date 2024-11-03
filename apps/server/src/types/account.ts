@@ -4,6 +4,7 @@ export interface AccountData {
     id: string;
     name: string;
     type: AccountType
+    nik?: string
 }
 
 export interface UserSignupDto {
@@ -17,7 +18,7 @@ export interface UserSignupDto {
     motherName: string
 }
 
-export interface AccountLoginDto{
+export interface AccountLoginDto {
     id: string,
     password: string
 }

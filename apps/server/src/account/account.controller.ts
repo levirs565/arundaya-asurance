@@ -36,7 +36,6 @@ export class AccountController {
     
     @Get("/state")
     async state(@Session() session: SessionData) {
-        console.log(session)
         return {
             account: session.account
         } as AccountStateDto

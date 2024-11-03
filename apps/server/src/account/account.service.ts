@@ -4,7 +4,7 @@ import { genSalt, hash, compare } from "bcrypt";
 import SessionData from '../types/session';
 import { AccountType, UserClass } from '@prisma/client';
 import { CommonServiceException } from '../common/common-service.exception';
-import { validateAccountLoggedIn} from '../common/service.helper'
+import { validateAccountLoggedIn } from '../common/service.helper'
 
 const saltRounds = 10;
 
@@ -78,18 +78,35 @@ export class AccountService {
       throw new CommonServiceException("Account not found");
     }
     const matched = await compare(password, account.passwordHash);
-    
-    if(!matched){
+
+    if (!matched) {
       throw new CommonServiceException("Invalid Password!")
     }
+
+    let nik = undefined;
+
+    if (account.type == AccountType.USER) {
+      const user = await this.prismaClient.user.findUnique({
+        where: {
+          accountId: id
+        }
+      })
+
+      if (!user)
+        throw new Error("User NIK not found");
+
+      nik = user.nik;
+    }
+
     SessionData.account = {
       id,
       name: account.name,
-      type: account.type
+      type: account.type,
+      nik
     }
   }
 
-  async logout(SessionData: SessionData){
+  async logout(SessionData: SessionData) {
     validateAccountLoggedIn(SessionData);
     SessionData.account = undefined
   }
