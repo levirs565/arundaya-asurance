@@ -1,11 +1,11 @@
-import { UserData } from './user';
+import { AccountData } from './account';
 
 declare module 'express-session' {
   interface SessionData {
-    user?: UserData;
+    account?: AccountData;
   }
 }
 
-export default interface Session {
-  user?: UserData;
+export default interface SessionData {
+  account?: AccountData;
 }
