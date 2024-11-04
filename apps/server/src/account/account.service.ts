@@ -22,7 +22,7 @@ export class AccountService {
     nik: string,
     name: string,
     password: string,
-    bithDate: Date,
+    birthDate: Date,
     job: string,
     income: number,
     motherName: string
@@ -57,7 +57,7 @@ export class AccountService {
       data: {
         nik,
         accountId: id,
-        bithDate,
+        birthDate,
         job,
         income,
         motherName,

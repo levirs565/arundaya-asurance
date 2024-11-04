@@ -24,7 +24,6 @@ export class ClaimService {
         const claim = await this.prismaClient.claim.create({
             data: {
                 userNik: user.nik,
-                date: new Date(),
                 description,
                 hospital,
                 type,
