@@ -36,7 +36,7 @@ function LoginForm() {
   return <Form {...form}>
     <div className='flex items-center justify-center h-screen w-full'>
       <form onSubmit={form.handleSubmit(onSubmit)}>
-        <Card className='max-w-96 mx-auto' style={{ minWidth: '360px', minHeight: '100px' }}>
+        <Card className='max-w-96 mx-auto' style={{ minWidth: '360px' }}>
           <CardHeader>
             <CardTitle>Login</CardTitle>
           </CardHeader>
