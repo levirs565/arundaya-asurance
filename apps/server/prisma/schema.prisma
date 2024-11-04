@@ -28,6 +28,11 @@ enum UserClass {
   C
 }
 
+model ClassData {
+  name           UserClass @id
+  premiAmount    Int
+}
+
 model User {
   nik               String    @id
   accountId         String    @unique
@@ -99,5 +104,5 @@ model Session {
   id        String   @id
   sid       String   @unique
   data      String   @db.Text
-  expiresAt DateTime
+  expiresAt DateTime 
 }
