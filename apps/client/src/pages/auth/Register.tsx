@@ -100,15 +100,15 @@ function RegisterForm() {
   }
 
   return <Form {...form}>
-    <div className='flex items-center justify-center h-screen w-full'>
-      <form onSubmit={  form.handleSubmit(onSubmit)}>
-        <Card className='max-w-96 mx-auto' style={{ minWidth: '1200px'}}>
+    <div className='flex items-center justify-center min-h-screen w-full px-4'>
+      <form onSubmit={ form.handleSubmit(onSubmit)} className="w-full max-w-4xl">
+        <Card className='max-w-96 mx-auto w-full' style={{ minWidth: '1000px'}}>
           <CardHeader>
             <CardTitle>Register</CardTitle>
           </CardHeader>
           <CardContent>
-           <div className='flex flex-col md:flex-row gap-5'>
-            <div className='flex-1'>
+           <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+            <div>
               <FormField
                 control={form.control}
                 name="id"
@@ -177,7 +177,7 @@ function RegisterForm() {
                 </FormItem>}
               />
             </div>
-            <div className='flex-1'>
+            <div>
               <FormField
                   control={form.control}
                   name="birthDate"
