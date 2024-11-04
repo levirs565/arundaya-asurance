@@ -9,14 +9,14 @@ import { zodResolver } from '@hookform/resolvers/zod';
 
 const loginSchema = z.object({
   password: z.string({
-    message: "tidak boleh kosong"
+    message: "Tidak boleh kosong"
   }).min(8, {
-    message: "minimal 8 karakter"
+    message: "Minimal 8 karakter"
   })
   , username: z.string({
-    message: "tidak boleh kosong"
+    message: "Tidak boleh kosong"
   }).min(6, {
-    message: "minimal 6 karakter"
+    message: "Minimal 6 karakter"
   })
 })
 
