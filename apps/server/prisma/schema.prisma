@@ -28,11 +28,16 @@ enum UserClass {
   C
 }
 
+model ClassData {
+  name           UserClass @id
+  premiAmount    Int
+}
+
 model User {
   nik               String    @id
   accountId         String    @unique
   account           Account   @relation(fields: [accountId], references: [id])
-  bithDate          DateTime
+  birthDate         DateTime
   job               String
   income            Int
   motherName        String
@@ -69,7 +74,7 @@ enum ClaimState {
 
 model Claim {
   id                 Int      @id @default(autoincrement())
-  date               DateTime
+  date               DateTime @default(now())
   userNik            String
   user               User     @relation(fields: [userNik], references: [nik])
   assignedEmployeeId String?
@@ -93,4 +98,11 @@ model Premi {
   user    User       @relation(fields: [userNik], references: [nik])
   amount  Int
   state   PremiState
+}
+
+model Session {
+  id        String   @id
+  sid       String   @unique
+  data      String   @db.Text
+  expiresAt DateTime 
 }
