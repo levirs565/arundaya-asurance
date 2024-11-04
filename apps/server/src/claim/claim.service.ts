@@ -35,20 +35,29 @@ export class ClaimService {
         return claim.id
     }
 
-    async cancel(session: SessionData, id: number) {
-        validateAccountLoggedIn(session);
+    private validateClaimOwner(claim: Claim, session: SessionData) {
+        if (claim.userNik != session.account.nik) {
+            throw new CommonServiceException("You are not claim owner")
+        }
+    }
 
+    private async findClaim(id: number): Promise<Claim> {
         const claim = await this.prismaClient.claim.findUnique({
             where: { id }
         })
 
         if (!claim) {
-            throw new HttpException("Claim tidak ditemukan!", HttpStatus.NOT_FOUND);
+            throw new HttpException("Claim not found", HttpStatus.NOT_FOUND);
         }
 
-        if (claim.userNik != session.account.nik) {
-            throw new CommonServiceException("Klaim bukan milik anda")
-        }
+        return claim;
+    }
+
+    async cancel(session: SessionData, id: number) {
+        validateAccountLoggedIn(session);
+
+        const claim = await this.findClaim(id);
+        this.validateClaimOwner(claim, session)
 
         await this.prismaClient.claim.delete({
             where: { id }
@@ -68,32 +77,17 @@ export class ClaimService {
     async get(session: SessionData, id: number): Promise<Claim> {
         validateAccountLoggedIn(session);
 
-        const claim = await this.prismaClient.claim.findUnique({
-            where: { id }
-        })
-        if (!claim) {
-            throw new HttpException("Claim tidak ditemukan!", HttpStatus.NOT_FOUND);
-        }
-        if (claim.userNik != session.account.nik) {
-            throw new CommonServiceException("Anda bukan pemilik claim!")
-        }
+        const claim = await this.findClaim(id);
+        this.validateClaimOwner(claim, session)
+
         return claim;
     }
 
     async edit(session: SessionData, id: number, description: string, hospital: string, type: string) {
         validateAccountLoggedIn(session)
 
-        const claim = await this.prismaClient.claim.findUnique({
-            where: { id }
-        });
-
-        if (!claim) {
-            throw new HttpException("Claim tidak ditemukan!", HttpStatus.NOT_FOUND);
-        }
-
-        if (claim.userNik != session.account.nik) {
-            throw new CommonServiceException("Anda bukan pemilik claim!")
-        }
+        const claim = await this.findClaim(id);
+        this.validateClaimOwner(claim, session)
 
         // TODO: Add last edit time
         await this.prismaClient.claim.update({
