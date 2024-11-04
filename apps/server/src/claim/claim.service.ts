@@ -89,6 +89,10 @@ export class ClaimService {
         const claim = await this.findClaim(id);
         this.validateClaimOwner(claim, session)
 
+        if (claim.state != ClaimState.NOT_ASSIGNED) {
+            throw new CommonServiceException("You can only edit unassigned claim")
+        }
+
         // TODO: Add last edit time
         await this.prismaClient.claim.update({
             where: {id},
