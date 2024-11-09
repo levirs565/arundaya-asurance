@@ -6,14 +6,16 @@ import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, For
 import { Input } from '@client/components/ui/input';
 import { z } from "zod";
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useAccountLogin, useAccountState } from '@client/api/account';
+import { Navigate } from 'react-router-dom';
 
 const loginSchema = z.object({
   password: z.string({
     message: "Tidak boleh kosong"
   }).min(8, {
     message: "Minimal 8 karakter"
-  })
-  , username: z.string({
+  }), 
+  id: z.string({
     message: "Tidak boleh kosong"
   }).min(6, {
     message: "Minimal 6 karakter"
@@ -24,13 +26,14 @@ function LoginForm() {
   const form = useForm({
     resolver: zodResolver(loginSchema),
     defaultValues: {
-      username: "",
+      id: "",
       password: ""
     }
   });
+  const { trigger, isMutating } = useAccountLogin();
 
-  function onSubmit(data) {
-    console.log(data);
+  function onSubmit(data: any) {
+    trigger(data);
   }
 
   return <Form {...form}>
@@ -44,7 +47,7 @@ function LoginForm() {
 
             <FormField
               control={form.control}
-              name="username"
+              name="id"
               render={({ field }) =>
                 <FormItem>
                   <FormLabel>Username</FormLabel>
@@ -75,7 +78,7 @@ function LoginForm() {
                 </FormItem>} />
           </CardContent>
           <CardFooter>
-            <Button type='submit'>Login</Button>
+            <Button type='submit' disabled={isMutating}>Login</Button>
           </CardFooter>
         </Card>
       </form>
@@ -83,6 +86,10 @@ function LoginForm() {
   </Form>
 }
 export function LoginPage() {
+  const { data } = useAccountState();
+  if (data && data.account) {
+    return <Navigate to="/dasboard"></Navigate>
+  }
 
-  return LoginForm();
+  return <LoginForm/>;
 }

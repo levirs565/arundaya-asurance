@@ -22,15 +22,6 @@ import { z } from "zod";
 import { zodResolver } from '@hookform/resolvers/zod';
 import { subYears, format } from "date-fns";
 
-// id: ,
-// password: ,
-// nik: ,
-// name: ,
-// birthDate: ,
-// job: ,
-// income: ,
-// motherName: 
-
 const registerSchema = z.object({
   id: z.string({
     message: "Tidak Boleh Kosong"
@@ -283,5 +274,5 @@ function RegisterForm() {
 }
 export function RegisterPage() {
 
-  return RegisterForm();
+  return <RegisterPage/>;
 }
