@@ -29,21 +29,23 @@ enum UserClass {
 }
 
 model ClassData {
-  name           UserClass @id
-  premiAmount    Int
+  name        UserClass @id
+  premiAmount Int
+  users        User[]
 }
 
 model User {
-  nik               String    @id
-  accountId         String    @unique
-  account           Account   @relation(fields: [accountId], references: [id])
-  birthDate         DateTime
-  job               String
-  income            Int
-  motherName        String
-  subscriptionClass UserClass
-  claims            Claim[]
-  premis            Premi[]
+  nik                   String    @id
+  accountId             String    @unique
+  account               Account   @relation(fields: [accountId], references: [id])
+  birthDate             DateTime
+  job                   String
+  income                Int
+  motherName            String
+  subscriptionClass     UserClass
+  subscriptionClassData ClassData @relation(fields: [subscriptionClass], references: [name])
+  claims                Claim[]
+  premis                Premi[]
 }
 
 enum Day {
@@ -93,7 +95,7 @@ enum PremiState {
 
 model Premi {
   id      Int        @id @default(autoincrement())
-  date    DateTime
+  date    DateTime   @default(now())
   userNik String
   user    User       @relation(fields: [userNik], references: [nik])
   amount  Int
@@ -104,5 +106,5 @@ model Session {
   id        String   @id
   sid       String   @unique
   data      String   @db.Text
-  expiresAt DateTime 
+  expiresAt DateTime
 }

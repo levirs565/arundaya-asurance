@@ -8,6 +8,7 @@ import { RouterModule } from '@nestjs/core';
 import { AccountModule } from '../account/account.module';
 import { PrismaModule } from '../prisma/prisma.module';
 import { ClaimModule } from '../claim/claim.module';
+import { PremiModule } from '../premi/premi.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { ClaimModule } from '../claim/claim.module';
     PrismaModule,
     AccountModule,
     ClaimModule,
+    PremiModule,
     RouterModule.register([
       {
         path: "account",
@@ -23,6 +25,10 @@ import { ClaimModule } from '../claim/claim.module';
       {
         path: "claim",
         module: ClaimModule
+      },
+      {
+        path: "premi",
+        module: PremiModule
       }
     ])
   ],
