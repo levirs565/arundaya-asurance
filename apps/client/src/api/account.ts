@@ -13,7 +13,7 @@ export const useAccountLogin = () => useSWRMutation(
 
 export const useAccountRegister = () => useSWRMutation(
     accountStatePath,
-    (key, { arg }) => post("/account/register", arg)
+    (key, { arg }) => post("/account/signup-user", arg)
 )
 export const useAccountLogout = () => useSWRMutation(
     accountStatePath,

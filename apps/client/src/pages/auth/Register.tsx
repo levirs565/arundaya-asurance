@@ -21,53 +21,46 @@ import {
 import { z } from "zod";
 import { zodResolver } from '@hookform/resolvers/zod';
 import { subYears, format } from "date-fns";
+import { useAccountRegister, useAccountState } from '@client/api/account';
+import { Navigate, useNavigate } from 'react-router-dom';
+import { CurrencyInput } from '@client/components/CurrencyInput';
 
 const registerSchema = z.object({
-  id: z.string({
-    message: "Tidak Boleh Kosong"
-  }).min(6, {
+  id: z.string().min(6, {
     message: "Minimal 6 Karakter"
   }),
 
-  password: z.string({
-    message: "Tidak Boleh Kosong"
-  }).min(8, {
+  password: z.string().min(8, {
     message: "Minimal 8 Karakter"
   }),
 
-  nik: z.string({
-    message: "Tidak Boleh Kosong"
-  }).min(16, {
-    message: "Minimal 16 Karakter"
+  nik: z.string().length(16, {
+    message: "Harus 16 Karakter"
   }),
 
-  name: z.string({
+  name: z.string().min(1, {
     message: "Tidak Boleh Kosong"
   }),
-  
-  birthDate: z.date().min(
+
+  birthDate: z.date().max(
     subYears(Date.now(), 17), {
       message: "Anda belum memenuhi batas umur"
-    }
-  ),
+    }),
 
-  job: z.string({
+  job: z.string().min(1, {
     message: "Tidak Boleh Kosong"
   }),
 
   income: z.number({
-    message: "Tidak Boleh Kosong"
+    message: "Harus berupa angka"
   }),
 
-  motherName: z.string({
+  motherName: z.string().min(1, {
     message: "Tidak Boleh Kosong"
   })
-})
+});
 
-function formatNumberWithDots(value) {
-  // Remove any existing dots and format the number again
-  return value.replace(/\D/g, '').replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-}
+
 
 function RegisterForm() {
   const form = useForm({
@@ -77,23 +70,25 @@ function RegisterForm() {
       password: "",
       nik: "",
       name: "",
-      birthDate: Date.now(),
+      birthDate: null,
       job: "",
-      income: 0,
+      income: "",
       motherName: "" 
     }
   });
+  const { trigger, isMutating, error, reset } = useAccountRegister();
+  const navigate = useNavigate();
 
-  const [date, setDate] = React.useState<Date>();
-
-  function onSubmit(data) {
-    console.log(data);
+  function onSubmit(data: any) {
+    trigger(data, {
+      onSuccess: () => navigate("/login")
+    })
   }
 
   return <Form {...form}>
     <div className='flex items-center justify-center min-h-screen w-full px-4'>
-      <form onSubmit={ form.handleSubmit(onSubmit)} className="w-full max-w-4xl">
-        <Card className='max-w-96 mx-auto w-full' style={{ minWidth: '1000px'}}>
+      <form onSubmit={ form.handleSubmit(onSubmit, reset)} className="w-full max-w-4xl">
+        <Card className='max-w-96 mx-auto w-full md:min-w-[560px]'>
           <CardHeader>
             <CardTitle>Register</CardTitle>
           </CardHeader>
@@ -175,33 +170,31 @@ function RegisterForm() {
                   render={({ field }) =>
                     <FormItem>
                       <FormLabel>Tanggal Lahir</FormLabel>
-                      <div className='mt-2'>
-                        <FormControl>
-                          <Popover>
-                            <PopoverTrigger asChild>
-                              <Button
-                              variant={"outline"}
-                              className={cn(
-                                "w-[280px] justify-start text-left font-normal",
-                                !date && "text-muted-foreground"
-                              )}>
-                                <CalendarIcon />
-                                {date ? format(date, "PPP") : <span>Pick a date</span>}
-                              </Button>
-                            </PopoverTrigger>
-                            <PopoverContent className="w-auto p-0">
-                              <Calendar
-                                mode="single"
-                                selected={date}
-                                onSelect={setDate}
-                                initialFocus
-                              />
-                            </PopoverContent>
-                          </Popover>
-                        </FormControl>
-                      </div>
+                      <FormControl>
+                        <Popover>
+                          <PopoverTrigger asChild>
+                            <Button
+                            variant={"outline"}
+                            className={cn(
+                              "w-full flex justify-start text-left font-normal",
+                              !field.value && "text-muted-foreground"
+                            )}>
+                              <CalendarIcon />
+                              {field.value ? format(field.value, "PPP") : <span>Pick a date</span>}
+                            </Button>
+                          </PopoverTrigger>
+                          <PopoverContent className="w-auto p-0">
+                            <Calendar
+                              mode="single"
+                              selected={field.value as any}
+                              onSelect={field.onChange}
+                              initialFocus
+                            />
+                          </PopoverContent>
+                        </Popover>
+                      </FormControl>
                       <FormDescription>
-                        
+                      
                       </FormDescription>
                       <FormMessage />
                   </FormItem>}
@@ -231,12 +224,9 @@ function RegisterForm() {
                     <FormItem>
                       <FormLabel>Penghasilan Bulanan</FormLabel>
                       <FormControl>
-                      <Input
+                      <CurrencyInput
                         {...field}
-                        onChange={(e) => {
-                          const formattedValue = formatNumberWithDots(e.target.value);
-                          field.onChange(formattedValue); // Update the form field value with the formatted string
-                        }}
+                        onChange={field.onChange}
                       />
                       </FormControl>
                       <FormDescription>
@@ -265,7 +255,8 @@ function RegisterForm() {
            </div>
           </CardContent>
           <CardFooter>
-            <Button type='submit'>Register</Button>
+            {error ? <p className='flex-grow text-sm font-medium text-red-500 dark:text-red-900'>{error.message}</p> : <div className='flex-grow'/>}
+            <Button type='submit' disabled={isMutating}>Register</Button>
           </CardFooter>
         </Card>
       </form>
@@ -273,6 +264,8 @@ function RegisterForm() {
   </Form>
 }
 export function RegisterPage() {
+  const { data } = useAccountState();
+  if (data && data.account) return <Navigate to="/dashboard" />
 
-  return <RegisterPage/>;
+  return <RegisterForm/>;
 }
