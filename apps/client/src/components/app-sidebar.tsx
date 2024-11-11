@@ -11,6 +11,7 @@ import {
     SidebarFooter,
   } from "@client/components/ui/sidebar"
 import { AccountAction } from "./account-action"
+import { Link } from "react-router-dom"
 
 const data = {
     action: ["Switch Account", "Log out"],
@@ -37,7 +38,7 @@ return (
             {data.navMain.map((item) => (
                 <SidebarMenuItem key={item.title}>
                 <SidebarMenuButton asChild isActive={item.isActive}>
-                    <a href={item.url}>{item.title}</a>
+                    <Link to={item.url}>{item.title}</Link>
                 </SidebarMenuButton>
                 </SidebarMenuItem>
             ))}
