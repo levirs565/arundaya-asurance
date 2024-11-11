@@ -8,6 +8,9 @@ import { z } from "zod";
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useAccountLogin, useAccountState } from '@client/api/account';
 import { Navigate } from 'react-router-dom';
+import { cn } from '@client/lib/utils';
+import { error } from 'console';
+import { ErrorLabel } from '@client/components/label';
 
 const loginSchema = z.object({
   password: z.string({
@@ -30,7 +33,7 @@ function LoginForm() {
       password: ""
     }
   });
-  const { trigger, isMutating } = useAccountLogin();
+  const { trigger, isMutating, error, reset } = useAccountLogin();
 
   function onSubmit(data: any) {
     trigger(data);
@@ -38,13 +41,12 @@ function LoginForm() {
 
   return <Form {...form}>
     <div className='flex items-center justify-center h-screen w-full'>
-      <form onSubmit={form.handleSubmit(onSubmit)}>
+      <form onSubmit={form.handleSubmit(onSubmit, reset)}>
         <Card className='max-w-96 mx-auto' style={{ minWidth: '360px' }}>
           <CardHeader>
             <CardTitle>Login</CardTitle>
           </CardHeader>
           <CardContent>
-
             <FormField
               control={form.control}
               name="id"
@@ -56,7 +58,7 @@ function LoginForm() {
                     </Input>
                   </FormControl>
                   <FormDescription>
-                    
+
                   </FormDescription>
                   <FormMessage />
                 </FormItem>} />
@@ -74,10 +76,11 @@ function LoginForm() {
                   <FormDescription>
                     
                   </FormDescription>
-                  <FormMessage />
+                    <FormMessage />
                 </FormItem>} />
           </CardContent>
-          <CardFooter>
+          <CardFooter className={cn("flex-col items-start gap-2")}>
+            {error && <ErrorLabel text={error.message}/>}
             <Button type='submit' disabled={isMutating}>Login</Button>
           </CardFooter>
         </Card>
@@ -88,7 +91,7 @@ function LoginForm() {
 export function LoginPage() {
   const { data } = useAccountState();
   if (data && data.account) {
-    return <Navigate to="/dasboard"></Navigate>
+    return <Navigate to="/dashboard"></Navigate>
   }
 
   return <LoginForm/>;

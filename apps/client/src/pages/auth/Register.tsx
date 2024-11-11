@@ -24,6 +24,7 @@ import { subYears, format } from "date-fns";
 import { useAccountRegister, useAccountState } from '@client/api/account';
 import { Navigate, useNavigate } from 'react-router-dom';
 import { CurrencyInput } from '@client/components/CurrencyInput';
+import { ErrorLabel } from '@client/components/label';
 
 const registerSchema = z.object({
   id: z.string().min(6, {
@@ -255,7 +256,7 @@ function RegisterForm() {
            </div>
           </CardContent>
           <CardFooter>
-            {error ? <p className='flex-grow text-sm font-medium text-red-500 dark:text-red-900'>{error.message}</p> : <div className='flex-grow'/>}
+            {error ? <ErrorLabel className='flex-grow' text={error.message}/> : <div className='flex-grow'/>}
             <Button type='submit' disabled={isMutating}>Register</Button>
           </CardFooter>
         </Card>
