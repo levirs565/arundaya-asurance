@@ -5,6 +5,7 @@ import { LoginPage } from "./pages/auth/Login";
 import { RegisterPage } from "./pages/auth/Register";
 import { DashboardPage } from "./pages/DashboardPage/Dashboard";
 import { PremiPage } from "./pages/DashboardPage/Premi";
+import { ClaimPage } from "./pages/DashboardPage/Claim";
 
 export const router = createBrowserRouter([
     {
@@ -20,8 +21,8 @@ export const router = createBrowserRouter([
         element: <DashboardPage />,
         children: [
             {
-                path: "",
-                element: <p>Kos</p>
+                path: "claim",
+                element: <ClaimPage/>
             },
             {
                 path: "premi",

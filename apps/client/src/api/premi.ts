@@ -1,6 +1,6 @@
 import useSWR from "swr";
 import { fetcher, post } from "./common";
-import useSWRMutation from "swr/dist/mutation";
+import useSWRMutation from "swr/mutation";
 
 export const usePremiHasPaid = () => useSWR("/premi/has-paid", fetcher);
 

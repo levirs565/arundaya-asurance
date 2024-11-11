@@ -1,6 +1,6 @@
 import useSWR from "swr";
 import { fetcher, httpDelete, post, put } from "./common";
-import useSWRMutation from "swr/dist/mutation";
+import useSWRMutation from "swr/mutation";
 
 const listKey = "/claim";
 
