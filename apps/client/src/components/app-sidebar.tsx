@@ -17,15 +17,11 @@ const data = {
     navMain: [
         {
             title: "Premi",
-            url: "#",
-        },
-        {
-            title: "History",
-            url: "#",
+            url: "/dashboard/premi",
         },
         {
             title: "Claim",
-            url: "#",
+            url: "/dashboard/claim",
         }
     ]
 }
@@ -37,13 +33,15 @@ return (
     </SidebarHeader>
 
     <SidebarContent>
-        {data.navMain.map((item) => (
-            <SidebarMenuItem key={item.title}>
-            <SidebarMenuButton asChild isActive={item.isActive}>
-                <a href={item.url}>{item.title}</a>
-            </SidebarMenuButton>
-            </SidebarMenuItem>
-        ))}
+        <SidebarMenu>
+            {data.navMain.map((item) => (
+                <SidebarMenuItem key={item.title}>
+                <SidebarMenuButton asChild isActive={item.isActive}>
+                    <a href={item.url}>{item.title}</a>
+                </SidebarMenuButton>
+                </SidebarMenuItem>
+            ))}
+        </SidebarMenu>
     </SidebarContent>
 
     <SidebarFooter />
