@@ -9,12 +9,11 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
     SidebarFooter,
-  } from "@client/components/ui/sidebar"
+} from "@client/components/ui/sidebar"
 import { AccountAction } from "./account-action"
-import { Link } from "react-router-dom"
+import { Link, NavLink } from "react-router-dom"
 
 const data = {
-    action: ["Switch Account", "Log out"],
     navMain: [
         {
             title: "Premi",
@@ -27,26 +26,29 @@ const data = {
     ]
 }
 export function AppSidebar() {
-return (
-    <Sidebar>
-    <SidebarHeader>
-        <AccountAction ActionList={data.action} />
-    </SidebarHeader>
+    return (
+        <Sidebar>
+            <SidebarHeader>
+                <AccountAction />
+            </SidebarHeader>
 
-    <SidebarContent>
-        <SidebarMenu>
-            {data.navMain.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                <SidebarMenuButton asChild isActive={item.isActive}>
-                    <Link to={item.url}>{item.title}</Link>
-                </SidebarMenuButton>
-                </SidebarMenuItem>
-            ))}
-        </SidebarMenu>
-    </SidebarContent>
+            <SidebarContent>
+                <SidebarMenu>
+                    {data.navMain.map((item) => (
+                        <SidebarMenuItem key={item.title}>
+                            <NavLink to={item.url}>
+                                {({ isActive }) => (
+                                    <SidebarMenuButton isActive={isActive}>
+                                        {item.title}
+                                    </SidebarMenuButton>
+                                )}
+                            </NavLink>
+                        </SidebarMenuItem>
+                    ))}
+                </SidebarMenu>
+            </SidebarContent>
 
-    <SidebarFooter />
-    </Sidebar>
-)
+            <SidebarFooter />
+        </Sidebar>
+    )
 }
-  

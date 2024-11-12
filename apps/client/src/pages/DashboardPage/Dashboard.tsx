@@ -2,18 +2,25 @@ import { useState } from 'react'
 import { useForm } from 'react-hook-form';
 import { SidebarProvider, SidebarTrigger } from "@client/components/ui/sidebar"
 import { AppSidebar } from '@client/components/app-sidebar';
-import { Outlet } from 'react-router-dom';
+import { Navigate, Outlet } from 'react-router-dom';
+import { useAccountState } from '@client/api/account';
 
-export function DashboardPage(){
+export function DashboardPage() {
+  const { isLoading, data } = useAccountState();
 
-    return (
-        <SidebarProvider>
-          <AppSidebar />
-          <main className='w-full'>
-            {/* <SidebarTrigger  /> */}
-            <Outlet/>
-          </main>
-        </SidebarProvider>
-      )
+  if (isLoading) return <></>
+
+  if (data && !data.account) {
+    return <Navigate to="/login" />
+  }
+
+  return (
+    <SidebarProvider>
+      <AppSidebar />
+      <main className='w-full'>
+        {/* <SidebarTrigger  /> */}
+        <Outlet />
+      </main>
+    </SidebarProvider>
+  )
 }
-  
