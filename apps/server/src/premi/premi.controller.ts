@@ -1,6 +1,6 @@
 import { Controller, Get, Param, ParseIntPipe, Post, Session } from "@nestjs/common";
 import { PremiService } from "./premi.service";
-import session, { SessionData } from "express-session";
+import { SessionData } from "express-session";
 import { HasPaidPremiResultDto, PayPremiResultDto, PremiListDto } from "../types/premi";
 import { Premi } from "@prisma/client";
 import { AllowedAccountType } from "../common/account-type.guard";
