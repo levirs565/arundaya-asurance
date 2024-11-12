@@ -81,6 +81,9 @@ export class PremiService {
         return await this.prismaClient.premi.findMany({
             where: {
                 userNik: session.account.nik
+            },
+            orderBy: {
+                date: "desc"
             }
         })
     }

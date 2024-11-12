@@ -69,6 +69,9 @@ export class ClaimService {
         return await this.prismaClient.claim.findMany({
             where: {
                 userNik: session.account.nik
+            },
+            orderBy: {
+                date: "desc"
             }
         })
     }
