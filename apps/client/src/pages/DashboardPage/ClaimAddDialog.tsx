@@ -101,7 +101,10 @@ export function ClaimAddDialog({ children }: { children: any }) {
 
                 <DialogFooter>
                     <Button type="submit">Ajukan</Button>
-                    <Button variant="outline">Batal</Button>
+                    <Button type="button" variant="outline" onClick={() => {
+                        reset();
+                        setOpen(false);
+                    }}>Batal</Button>
                 </DialogFooter>
             </Form>
         </DialogContent>
