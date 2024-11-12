@@ -54,7 +54,7 @@ const registerSchema = z.object({
   }),
 
   income: z.number({
-    message: "Harus berupa angka"
+    message: "Harus berupa angka dan tidak boleh kosong"
   }),
 
   motherName: z.string().min(1, {
@@ -235,7 +235,7 @@ function RegisterForm() {
                         {...field}
                         prefix="Rp"
                         intlConfig={{ locale: "id-ID", currency: "IDR" }}
-                        onValueChange={onChange}
+                        onValueChange={(value, name, values) => onChange(values?.float)}
                       />
                       </FormControl>
                       <FormDescription>
