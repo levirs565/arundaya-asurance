@@ -1,15 +1,18 @@
 import { Button } from "@client/components/ui/button";
 import { ClaimAddDialog } from "./ClaimAddDialog";
 import { ClaimList } from "./ClaimList";
+import { AppBar, AppBarTitle } from "@client/components/app-bar";
 
 export function ClaimPage() {
     return <div>
-        <div className="flex flex-row mb-4">
-            <h1 className="text-2xl font-semibold mb-4 flex-grow">Claim</h1>
+        <AppBar>
+            <AppBarTitle>Claim</AppBarTitle>
             <ClaimAddDialog >
                 <Button>Ajukan Klaim</Button>
             </ClaimAddDialog>
+        </AppBar>
+        <div className="p-4">
+            <ClaimList/>
         </div>
-        <ClaimList/>
     </div>
 }

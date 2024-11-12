@@ -9,7 +9,7 @@ export function DashboardPage(){
     return (
         <SidebarProvider>
           <AppSidebar />
-          <main className='p-4 w-full'>
+          <main className='w-full'>
             {/* <SidebarTrigger  /> */}
             <Outlet/>
           </main>
