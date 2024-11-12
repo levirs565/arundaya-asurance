@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { Premi, PremiState } from "@prisma/client";
 import SessionData from "../types/session";
 import { CommonServiceException } from "../common/common-service.exception";
@@ -61,6 +61,10 @@ export class PremiService {
                 id
             }
         });
+
+        if (!premi) {
+            throw new HttpException("Not Found", HttpStatus.NOT_FOUND);
+        }
 
         if (premi.userNik != session.account.nik) {
             throw new CommonServiceException("Cannot get other user premi");
