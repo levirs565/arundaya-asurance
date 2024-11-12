@@ -1,18 +1,18 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { Premi, PremiState } from "@prisma/client";
-import SessionData from "../types/session";
 import { CommonServiceException } from "../common/common-service.exception";
 import { PrismaService } from "../prisma/prisma.service";
 import { startOfMonth } from "date-fns"
+import { AccountData } from "../types/account";
 
 @Injectable()
 export class PremiService {
     constructor(private readonly prismaClient: PrismaService) { }
 
-    async hasPaid(session: SessionData): Promise<boolean> {
+    async hasPaid(account: AccountData): Promise<boolean> {
         return await this.prismaClient.premi.count({
             where: {
-                userNik: session.account.nik,
+                userNik: account.nik,
                 date: {
                     gte: startOfMonth(new Date())
                 },
@@ -21,14 +21,14 @@ export class PremiService {
         }) > 0;
     }
 
-    async pay(session: SessionData): Promise<number> {
-        if (await this.hasPaid(session)) {
+    async pay(account: AccountData): Promise<number> {
+        if (await this.hasPaid(account)) {
             throw new CommonServiceException("Has pay for this month")
         }
 
         if (await this.prismaClient.premi.count({
             where: {
-                userNik: session.account.nik,
+                userNik: account.nik,
                 state: PremiState.PENDING
             }
         }) > 0) {
@@ -37,7 +37,7 @@ export class PremiService {
 
         const user = await this.prismaClient.user.findUnique({
             where: {
-                nik: session.account.nik
+                nik: account.nik
             },
             select: {
                 subscriptionClassData: true
@@ -46,7 +46,7 @@ export class PremiService {
 
         const premi = await this.prismaClient.premi.create({
             data: {
-                userNik: session.account.nik,
+                userNik: account.nik,
                 state: PremiState.PENDING,
                 amount: user.subscriptionClassData.premiAmount
             }
@@ -55,7 +55,7 @@ export class PremiService {
         return premi.id;
     }
 
-    async get(session: SessionData, id: number): Promise<Premi> {
+    async get(account: AccountData, id: number): Promise<Premi> {
         const premi = await this.prismaClient.premi.findUnique({
             where: {
                 id
@@ -66,17 +66,17 @@ export class PremiService {
             throw new HttpException("Not Found", HttpStatus.NOT_FOUND);
         }
 
-        if (premi.userNik != session.account.nik) {
+        if (premi.userNik != account.nik) {
             throw new CommonServiceException("Cannot get other user premi");
         }
 
         return premi
     }
 
-    async list(session: SessionData): Promise<Premi[]> {
+    async list(account: AccountData): Promise<Premi[]> {
         return await this.prismaClient.premi.findMany({
             where: {
-                userNik: session.account.nik
+                userNik: account.nik
             },
             orderBy: {
                 date: "desc"

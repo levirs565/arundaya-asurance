@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { genSalt, hash, compare } from "bcrypt";
-import SessionData from '../types/session';
 import { AccountType, UserClass } from '@prisma/client';
 import { CommonServiceException } from '../common/common-service.exception';
+import { AccountData } from '../types/account';
 
 const saltRounds = 10;
 
@@ -65,7 +65,7 @@ export class AccountService {
     })
   }
 
-  async login(id: string, password: string, SessionData: SessionData) {
+  async login(id: string, password: string): Promise<AccountData> {
     const account = await this.prismaClient.account.findUnique({
       where: { id }
     });
@@ -94,15 +94,11 @@ export class AccountService {
       nik = user.nik;
     }
 
-    SessionData.account = {
+    return {
       id,
       name: account.name,
       type: account.type,
       nik
     }
-  }
-
-  async logout(sessionData: SessionData) {
-    sessionData.account = undefined
   }
 }

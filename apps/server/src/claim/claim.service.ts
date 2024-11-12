@@ -1,26 +1,17 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
-import SessionData from "../types/session";
 import { PrismaService } from "../prisma/prisma.service";
 import { CommonServiceException } from "../common/common-service.exception";
 import { Claim, ClaimState } from "@prisma/client";
+import { AccountData } from "../types/account";
 
 @Injectable()
 export class ClaimService {
     constructor(private readonly prismaClient: PrismaService) { }
 
-    async make(session: SessionData, description: string, hospital: string, type: string) {
-        const user = await this.prismaClient.user.findUnique({
-            where: {
-                accountId: session.account.id
-            }
-        })
-
-        if (!user)
-            throw Error("User NIK not found");
-
+    async make(account: AccountData, description: string, hospital: string, type: string) {
         const claim = await this.prismaClient.claim.create({
             data: {
-                userNik: user.nik,
+                userNik: account.nik,
                 description,
                 hospital,
                 type,
@@ -31,8 +22,8 @@ export class ClaimService {
         return claim.id
     }
 
-    private validateClaimOwner(claim: Claim, session: SessionData) {
-        if (claim.userNik != session.account.nik) {
+    private validateClaimOwner(claim: Claim, account: AccountData) {
+        if (claim.userNik != account.nik) {
             throw new CommonServiceException("You are not claim owner")
         }
     }
@@ -49,19 +40,19 @@ export class ClaimService {
         return claim;
     }
 
-    async cancel(session: SessionData, id: number) {
+    async cancel(account: AccountData, id: number) {
         const claim = await this.findClaim(id);
-        this.validateClaimOwner(claim, session)
+        this.validateClaimOwner(claim, account)
 
         await this.prismaClient.claim.delete({
             where: { id }
         })
     }
 
-    async list(session: SessionData): Promise<Claim[]> {
+    async list(account: AccountData): Promise<Claim[]> {
         return await this.prismaClient.claim.findMany({
             where: {
-                userNik: session.account.nik
+                userNik: account.nik
             },
             orderBy: {
                 date: "desc"
@@ -69,16 +60,16 @@ export class ClaimService {
         })
     }
 
-    async get(session: SessionData, id: number): Promise<Claim> {
+    async get(account: AccountData, id: number): Promise<Claim> {
         const claim = await this.findClaim(id);
-        this.validateClaimOwner(claim, session)
+        this.validateClaimOwner(claim, account)
 
         return claim;
     }
 
-    async edit(session: SessionData, id: number, description: string, hospital: string, type: string) {
+    async edit(account: AccountData, id: number, description: string, hospital: string, type: string) {
         const claim = await this.findClaim(id);
-        this.validateClaimOwner(claim, session)
+        this.validateClaimOwner(claim, account)
 
         if (claim.state != ClaimState.NOT_ASSIGNED) {
             throw new CommonServiceException("You can only edit unassigned claim")

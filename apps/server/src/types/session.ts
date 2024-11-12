@@ -5,7 +5,3 @@ declare module 'express-session' {
     account?: AccountData;
   }
 }
-
-export default interface SessionData {
-  account?: AccountData;
-}

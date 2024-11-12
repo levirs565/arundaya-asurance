@@ -2,7 +2,7 @@ import { Body, Controller, Get, Post, Session, UseInterceptors } from "@nestjs/c
 import { AccountService } from "./account.service";
 import { AccountLoginDto, AccountStateDto, UserSignupDto } from "../types/account";
 import { ActionInterceptor } from "../common/action.interceptor";
-import session, { SessionData } from "express-session";
+import { SessionData } from "express-session";
 import { AllowedAccountType } from "../common/account-type.guard";
 
 @Controller()
@@ -29,14 +29,14 @@ export class AccountController {
     @Post("/login")
     @UseInterceptors(ActionInterceptor)
     async login(@Body() body: AccountLoginDto, @Session() session: SessionData) {
-        await this.accountService.login(body.id, body.password, session)
+        session.account = await this.accountService.login(body.id, body.password);
     }
     
     @AllowedAccountType("LOGGED")
     @Post("/logout")
     @UseInterceptors(ActionInterceptor)
     async logout(@Session() session: SessionData){
-        await this.accountService.logout(session)
+        session.account = undefined;
     }
     
     @Get("/state")
