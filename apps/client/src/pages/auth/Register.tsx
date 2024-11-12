@@ -25,6 +25,7 @@ import { useAccountRegister, useAccountState } from '@client/api/account';
 import { Navigate, useNavigate } from 'react-router-dom';
 import { CurrencyInput } from '@client/components/CurrencyInput';
 import { ErrorLabel } from '@client/components/label';
+import { id } from "react-day-picker/locale"
 
 const registerSchema = z.object({
   id: z.string().min(6, {
@@ -181,15 +182,20 @@ function RegisterForm() {
                               !field.value && "text-muted-foreground"
                             )}>
                               <CalendarIcon />
-                              {field.value ? format(field.value, "PPP") : <span>Pick a date</span>}
+                              {field.value ? format(field.value, "dd MMMM yyyy") : <span>Pilih tinggal</span>}
                             </Button>
                           </PopoverTrigger>
                           <PopoverContent className="w-auto p-0">
                             <Calendar
+                              locale={id}
                               mode="single"
                               selected={field.value as any}
                               onSelect={field.onChange}
-                              initialFocus
+                              autoFocus
+                              captionLayout='dropdown'
+                              startMonth={new Date(1945, 0)}
+                              endMonth={new Date()}
+                              hideNavigation
                             />
                           </PopoverContent>
                         </Popover>
