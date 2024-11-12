@@ -23,9 +23,9 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { subYears, format } from "date-fns";
 import { useAccountRegister, useAccountState } from '@client/api/account';
 import { Navigate, useNavigate } from 'react-router-dom';
-import { CurrencyInput } from '@client/components/CurrencyInput';
 import { ErrorLabel } from '@client/components/label';
 import { id } from "react-day-picker/locale"
+import { CurrencyInput } from '@client/components/ui/currency-input';
 
 const registerSchema = z.object({
   id: z.string().min(6, {
@@ -227,13 +227,15 @@ function RegisterForm() {
                 <FormField
                   control={form.control}
                   name="income"
-                  render={({ field }) =>
+                  render={({ field: { onChange, ...field }}) =>
                     <FormItem>
                       <FormLabel>Penghasilan Bulanan</FormLabel>
                       <FormControl>
                       <CurrencyInput
                         {...field}
-                        onChange={field.onChange}
+                        prefix="Rp"
+                        intlConfig={{ locale: "id-ID", currency: "IDR" }}
+                        onValueChange={onChange}
                       />
                       </FormControl>
                       <FormDescription>
