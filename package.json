@@ -2,7 +2,9 @@
   "name": "@arundaya-asurance/source",
   "version": "0.0.0",
   "license": "MIT",
-  "scripts": {},
+  "scripts": {
+    "add-admin": "ts-node --project ./apps/server/tsconfig.app.json ./apps/server/src/add-admin.ts"
+  },
   "private": true,
   "dependencies": {
     "@hookform/resolvers": "^3.9.1",

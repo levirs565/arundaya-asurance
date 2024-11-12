@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { genSalt, hash, compare } from "bcrypt";
-import { AccountType, UserClass } from '@prisma/client';
+import { AccountType, Day, UserClass } from '@prisma/client';
 import { CommonServiceException } from '../common/common-service.exception';
 import { AccountData } from '../types/account';
 
@@ -16,6 +16,16 @@ export class AccountService {
     return await hash(password, salt);
   }
 
+  async validateIdNotUsed(id: string) {
+    if (await this.prismaClient.account.count({
+      where: {
+        id
+      }
+    }) > 0) {
+      throw new CommonServiceException("Account with this ID already registered");
+    }
+  }
+
   async signupUser(
     id: string,
     nik: string,
@@ -26,13 +36,7 @@ export class AccountService {
     income: number,
     motherName: string
   ) {
-    if (await this.prismaClient.account.count({
-      where: {
-        id
-      }
-    }) > 0) {
-      throw new CommonServiceException("Account with this ID already registered");
-    }
+    await this.validateIdNotUsed(id);
 
     if (await this.prismaClient.user.count({
       where: {
@@ -61,6 +65,53 @@ export class AccountService {
         income,
         motherName,
         subscriptionClass: UserClass.A
+      }
+    })
+  }
+
+  async addEmployee(
+    id: string,
+    name: string,
+    password: string,
+    startDay: Day,
+    startTime: Date,
+    endDay: Day,
+    endTime: Date
+  ) {
+    await this.validateIdNotUsed(id);
+
+    // TODO: Make ohter query like this
+    await this.prismaClient.account.create({
+      data: {
+        id,
+        passwordHash: await this.hashPassword(password),
+        name,
+        type: AccountType.EMPLOYEE,
+        employee: {
+          create: {
+            startDay,
+            startTime,
+            endDay,
+            endTime
+          }
+        }
+      }
+    })
+  }
+
+  async addAdmin(
+    id: string,
+    name: string,
+    password: string
+  ) {
+    await this.validateIdNotUsed(id);
+
+    await this.prismaClient.account.create({
+      data: {
+        id,
+        name,
+        passwordHash: await this.hashPassword(password),
+        type: AccountType.ADMIN
       }
     })
   }

@@ -1,4 +1,4 @@
-import { AccountType } from "@prisma/client";
+import { AccountType, Day } from "@prisma/client";
 
 export interface AccountData {
     id: string;
@@ -25,4 +25,14 @@ export interface AccountLoginDto {
 
 export interface AccountStateDto {
     account: AccountData
+}
+
+export interface AddEmployeeAccountDto {
+    id: string;
+    name: string;
+    password: string;
+    startDay: Day,
+    startTime: Date,
+    endDay: Day,
+    endTime: Date
 }
