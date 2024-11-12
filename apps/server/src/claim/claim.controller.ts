@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Session, UseInterceptors } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, Session, UseInterceptors } from "@nestjs/common";
 import { ClaimService } from "./claim.service";
 import { ClaimListDto, EditClaimDto, MakeClaimDto, MakeClaimResponseDto } from "../types/claim";
 import SessionData from "../types/session";
@@ -20,8 +20,8 @@ export class ClaimController {
 
     @Delete("/:id")
     @UseInterceptors(ActionInterceptor)
-    async cancel(@Param("id") id: string, @Session() session: SessionData) {
-        await this.claimService.cancel(session, parseInt(id));
+    async cancel(@Param("id", ParseIntPipe) id: number, @Session() session: SessionData) {
+        await this.claimService.cancel(session, id);
     }
 
     @Get("/")
@@ -33,13 +33,13 @@ export class ClaimController {
 
 
     @Get("/:id")
-    async get(@Param("id") id: string, @Session() session: SessionData): Promise<Claim> {
-        return await this.claimService.get(session, parseInt(id))
+    async get(@Param("id", ParseIntPipe) id: number, @Session() session: SessionData): Promise<Claim> {
+        return await this.claimService.get(session, id)
     }
 
     @Put("/:id")
     @UseInterceptors(ActionInterceptor)
-    async edit(@Param("id") id: string, @Body() body: EditClaimDto, @Session() session: SessionData) {
-        return await this.claimService.edit(session, parseInt(id), body.description, body.hospital, body.type);
+    async edit(@Param("id", ParseIntPipe) id: number, @Body() body: EditClaimDto, @Session() session: SessionData) {
+        return await this.claimService.edit(session, id, body.description, body.hospital, body.type);
     }
 }

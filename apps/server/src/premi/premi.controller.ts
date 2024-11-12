@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Post, Session } from "@nestjs/common";
+import { Controller, Get, Param, ParseIntPipe, Post, Session } from "@nestjs/common";
 import SessionData from "../types/session";
 import { PremiService } from "./premi.service";
 import session from "express-session";
@@ -33,7 +33,7 @@ export class PremiController {
     }
 
     @Get("/:id")
-    async get(@Session() session: SessionData, @Param("id") id: string): Promise<Premi> {
-        return await this.premiService.get(session, parseInt(id));
+    async get(@Session() session: SessionData, @Param("id", ParseIntPipe) id: number): Promise<Premi> {
+        return await this.premiService.get(session, id);
     }
 }
