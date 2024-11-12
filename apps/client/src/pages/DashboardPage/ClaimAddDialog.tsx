@@ -102,7 +102,7 @@ export function ClaimAddDialog({ children }: { children: any }) {
                 <DialogFooter>
                     <Button type="submit">Ajukan</Button>
                     <Button type="button" variant="outline" onClick={() => {
-                        reset();
+                        form.reset();
                         setOpen(false);
                     }}>Batal</Button>
                 </DialogFooter>
