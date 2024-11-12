@@ -95,6 +95,6 @@
   },
   "nx": {},
   "prisma": {
-    "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} apps/server/prisma/seed.ts"
+    "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} ./prisma/seed.ts"
   }
 }
