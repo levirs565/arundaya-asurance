@@ -3,8 +3,9 @@ import { Badge, BadgeProps } from "@client/components/ui/badge";
 import { Button } from "@client/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@client/components/ui/card"
 import { Collapsible, CollapsibleContent } from "@client/components/ui/collapsible";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@client/components/ui/dropdown-menu";
 import { format } from "date-fns";
-import { Check, CircleEllipsis, FileSearch, Loader, X } from "lucide-react";
+import { Check, CircleEllipsis, EllipsisVertical, FileSearch, Loader, X } from "lucide-react";
 import { useState } from "react";
 
 const claimStateMessages: Record<string, string> = {
