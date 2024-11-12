@@ -1,11 +1,13 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, Session, UseInterceptors } from "@nestjs/common";
 import { ClaimService } from "./claim.service";
-import { EditClaimDto, MakeClaimDto, MakeClaimResponseDto } from "../types/claim";
+import { ClaimListDto, EditClaimDto, MakeClaimDto, MakeClaimResponseDto } from "../types/claim";
 import SessionData from "../types/session";
 import { ActionInterceptor } from "../common/action.interceptor";
 import { Claim } from "@prisma/client";
+import { AllowedAccountType } from "../common/account-type.guard";
 
 @Controller()
+@AllowedAccountType("USER")
 export class ClaimController {
     constructor(private claimService: ClaimService) { }
 
@@ -23,8 +25,10 @@ export class ClaimController {
     }
 
     @Get("/")
-    async list(@Session() session: SessionData): Promise<Claim[]> {
-        return await this.claimService.list(session);
+    async list(@Session() session: SessionData): Promise<ClaimListDto> {
+        return {
+            list: await this.claimService.list(session)
+        }
     }
 
 

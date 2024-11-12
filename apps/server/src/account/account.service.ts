@@ -4,7 +4,6 @@ import { genSalt, hash, compare } from "bcrypt";
 import SessionData from '../types/session';
 import { AccountType, UserClass } from '@prisma/client';
 import { CommonServiceException } from '../common/common-service.exception';
-import { validateAccountLoggedIn } from '../common/service.helper'
 
 const saltRounds = 10;
 
@@ -67,9 +66,6 @@ export class AccountService {
   }
 
   async login(id: string, password: string, SessionData: SessionData) {
-    if (SessionData.account) {
-      throw new CommonServiceException("Already Logged in!")
-    }
     const account = await this.prismaClient.account.findUnique({
       where: { id }
     });
@@ -106,8 +102,7 @@ export class AccountService {
     }
   }
 
-  async logout(SessionData: SessionData) {
-    validateAccountLoggedIn(SessionData);
-    SessionData.account = undefined
+  async logout(sessionData: SessionData) {
+    sessionData.account = undefined
   }
 }

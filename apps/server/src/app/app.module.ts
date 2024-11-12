@@ -4,11 +4,12 @@ import { PrismaService } from '../prisma/prisma.service';
 import session from 'express-session';
 import { PrismaSessionStore } from '@quixo3/prisma-session-store';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { RouterModule } from '@nestjs/core';
+import { APP_GUARD, RouterModule } from '@nestjs/core';
 import { AccountModule } from '../account/account.module';
 import { PrismaModule } from '../prisma/prisma.module';
 import { ClaimModule } from '../claim/claim.module';
 import { PremiModule } from '../premi/premi.module';
+import { AccountTypeGuard } from '../common/account-type.guard';
 
 @Module({
   imports: [
@@ -32,7 +33,12 @@ import { PremiModule } from '../premi/premi.module';
       }
     ])
   ],
-
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: AccountTypeGuard
+    }
+  ]
 })
 export class AppModule implements NestModule {
   constructor(private prismaClient: PrismaService, private configService: ConfigService) { }

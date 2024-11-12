@@ -3,11 +3,13 @@ import { AccountService } from "./account.service";
 import { AccountLoginDto, AccountStateDto, UserSignupDto } from "../types/account";
 import { ActionInterceptor } from "../common/action.interceptor";
 import session, { SessionData } from "express-session";
+import { AllowedAccountType } from "../common/account-type.guard";
 
 @Controller()
 export class AccountController {
     constructor(private accountService: AccountService) {}
 
+    @AllowedAccountType("NOTLOGGED")
     @Post("/signup-user")
     @UseInterceptors(ActionInterceptor)
     async signupUser(@Body() body: UserSignupDto) {
@@ -22,12 +24,15 @@ export class AccountController {
             body.motherName
         )
     }
+
+    @AllowedAccountType("NOTLOGGED")
     @Post("/login")
     @UseInterceptors(ActionInterceptor)
     async login(@Body() body: AccountLoginDto, @Session() session: SessionData) {
         await this.accountService.login(body.id, body.password, session)
     }
     
+    @AllowedAccountType("LOGGED")
     @Post("/logout")
     @UseInterceptors(ActionInterceptor)
     async logout(@Session() session: SessionData){

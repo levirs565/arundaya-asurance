@@ -4,11 +4,12 @@ import { PremiService } from "./premi.service";
 import session from "express-session";
 import { HasPaidPremiResultDto, PayPremiResultDto, PremiListDto } from "../types/premi";
 import { Premi } from "@prisma/client";
+import { AllowedAccountType } from "../common/account-type.guard";
 
 @Controller()
+@AllowedAccountType("USER")
 export class PremiController {
     constructor(private readonly premiService: PremiService) { }
-
 
     @Get("/has-paid")
     async hasPaid(@Session() session: SessionData): Promise<HasPaidPremiResultDto> {

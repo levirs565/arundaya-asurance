@@ -1,7 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { Premi, PremiState } from "@prisma/client";
 import SessionData from "../types/session";
-import { validateAccountLoggedIn } from "../common/service.helper";
 import { CommonServiceException } from "../common/common-service.exception";
 import { PrismaService } from "../prisma/prisma.service";
 import { startOfMonth } from "date-fns"
@@ -11,7 +10,6 @@ export class PremiService {
     constructor(private readonly prismaClient: PrismaService) { }
 
     async hasPaid(session: SessionData): Promise<boolean> {
-        validateAccountLoggedIn(session);
         return await this.prismaClient.premi.count({
             where: {
                 userNik: session.account.nik,
@@ -24,8 +22,6 @@ export class PremiService {
     }
 
     async pay(session: SessionData): Promise<number> {
-        validateAccountLoggedIn(session);
-
         if (await this.hasPaid(session)) {
             throw new CommonServiceException("Has pay for this month")
         }
@@ -60,8 +56,6 @@ export class PremiService {
     }
 
     async get(session: SessionData, id: number): Promise<Premi> {
-        validateAccountLoggedIn(session);
-
         const premi = await this.prismaClient.premi.findUnique({
             where: {
                 id
@@ -76,8 +70,6 @@ export class PremiService {
     }
 
     async list(session: SessionData): Promise<Premi[]> {
-        validateAccountLoggedIn(session);
-
         return await this.prismaClient.premi.findMany({
             where: {
                 userNik: session.account.nik

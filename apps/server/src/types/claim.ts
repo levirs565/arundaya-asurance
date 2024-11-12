@@ -1,3 +1,5 @@
+import { Claim } from "@prisma/client"
+
 export interface MakeClaimDto {
     description: string
     hospital: string
@@ -12,4 +14,8 @@ export interface EditClaimDto {
 
 export interface MakeClaimResponseDto {
     id: number
+}
+
+export interface ClaimListDto {
+    list: Claim[]
 }
