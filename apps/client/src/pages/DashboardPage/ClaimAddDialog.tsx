@@ -40,7 +40,7 @@ export function ClaimAddDialog({ children }: { children: any }) {
 
     return <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>{children}</DialogTrigger>
-        <DialogContent asChild tag="form" onSubmit={form.handleSubmit(onSubmit, reset)}>
+        <DialogContent tag="form" onSubmit={form.handleSubmit(onSubmit, reset)}>
             <Form {...form}>
                 <DialogHeader>
                     <DialogTitle>Ajukan Klaim</DialogTitle>
