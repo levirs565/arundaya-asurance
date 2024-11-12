@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, Session, UseInterceptors } from "@nestjs/common";
-import { ClaimService } from "./claim.service";
-import { ClaimListDto, EditClaimDto, MakeClaimDto, MakeClaimResponseDto } from "../types/claim";
+import { ClaimUserService } from "./claim-user.service";
+import { ClaimListDto, EditClaimDto, MakeClaimDto, MakeClaimResponseDto } from "../types/claim-user";
 import { ActionInterceptor } from "../common/action.interceptor";
 import { Claim } from "@prisma/client";
 import { AllowedAccountType } from "../common/account-type.guard";
@@ -8,8 +8,8 @@ import { SessionData } from "express-session";
 
 @Controller()
 @AllowedAccountType("USER")
-export class ClaimController {
-    constructor(private claimService: ClaimService) { }
+export class ClaimUserController {
+    constructor(private claimService: ClaimUserService) { }
 
     @Post("/")
     async make(@Body() body: MakeClaimDto, @Session() session: SessionData): Promise<MakeClaimResponseDto> {
