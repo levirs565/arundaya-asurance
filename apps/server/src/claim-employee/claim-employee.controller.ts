@@ -2,14 +2,14 @@ import { Body, Controller, Param, ParseIntPipe, Post, Put, Session, UseIntercept
 import { AllowedAccountType } from "../common/account-type.guard";
 import { ActionInterceptor } from "../common/action.interceptor";
 import { SessionData } from "express-session";
-import { ClaimAdminService } from "./claim-admin.service";
+import { ClaimEmployeeService } from "./claim-employee.service";
 import { ClaimState } from "@prisma/client";
 import { ClaimAdminSetMessageDto } from "../types/claim-admin";
 
 @Controller()
 @AllowedAccountType("EMPLOYEE")
-export class ClaimAdminController {
-    constructor(private claimService: ClaimAdminService) {}
+export class ClaimEmployeeController {
+    constructor(private claimService: ClaimEmployeeService) {}
 
     @Post("/:id/take")
     @UseInterceptors(ActionInterceptor)

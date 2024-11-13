@@ -6,7 +6,7 @@ import { CommonServiceException } from "../common/common-service.exception";
 import { Claim, ClaimState } from "@prisma/client";
 
 @Injectable()
-export class ClaimAdminService {
+export class ClaimEmployeeService {
     constructor(private readonly prismaClient: PrismaService, private readonly claimService: ClaimService) {}
 
     async take(id: number, account: AccountData) {

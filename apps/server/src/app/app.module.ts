@@ -11,7 +11,7 @@ import { ClaimUserModule } from '../claim-user/claim-user.module';
 import { PremiModule } from '../premi/premi.module';
 import { AccountTypeGuard } from '../common/account-type.guard';
 import { ClaimModule } from '../claim/claim.module';
-import { ClaimAdminModule } from '../claim-admin/claim-admin.module';
+import { ClaimEmployeeModule } from '../claim-employee/claim-employee.module';
 
 @Module({
   imports: [
@@ -20,7 +20,7 @@ import { ClaimAdminModule } from '../claim-admin/claim-admin.module';
     AccountModule,
     ClaimModule,
     ClaimUserModule,
-    ClaimAdminModule,
+    ClaimEmployeeModule,
     PremiModule,
     RouterModule.register([
       {
@@ -28,17 +28,12 @@ import { ClaimAdminModule } from '../claim-admin/claim-admin.module';
         module: AccountModule
       },
       {
-        path: "claim",
-        children: [
-          {
-            path: "user",
-            module: ClaimUserModule,
-          },
-          {
-            path: "admin",
-            module: ClaimAdminModule
-          }
-        ]
+        path: "user/claim",
+        module: ClaimUserModule,
+      },
+      {
+        path: "employee/claim",
+        module: ClaimEmployeeModule
       },
       {
         path: "premi",
