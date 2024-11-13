@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { genSalt, hash, compare } from "bcrypt";
-import { AccountType, Day, UserClass } from '@prisma/client';
+import { AccountType, Day, Employee, UserClass } from '@prisma/client';
 import { CommonServiceException } from '../common/common-service.exception';
-import { AccountData } from '../types/account';
+import { AccountData, EmployeeDataDto } from '../types/account';
 
 const saltRounds = 10;
 
@@ -97,6 +97,30 @@ export class AccountService {
         }
       }
     })
+  }
+
+  async listEmployee(): Promise<EmployeeDataDto[]> {
+    return (await this.prismaClient.employee.findMany({
+      select: {
+        account: {
+          select: {
+            name: true
+          }
+        },
+        id: true,
+        startDay: true,
+        startTime: true,
+        endDay: true,
+        endTime: true
+      }
+    })).map(({ account, id, startDay, startTime, endDay, endTime }) => ({
+        name: account.name,
+        id,
+        startDay,
+        startTime,
+        endDay,
+        endTime
+    }))
   }
 
   async addAdmin(

@@ -36,3 +36,16 @@ export interface AddEmployeeAccountDto {
     endDay: Day,
     endTime: Date
 }
+
+export interface EmployeeDataDto {
+    id: string;
+    name: string;
+    startDay: Day;
+    startTime: Date;
+    endDay: Day;
+    endTime: Date;
+}
+
+export interface EmployeeListDto {
+    list: EmployeeDataDto[]
+}

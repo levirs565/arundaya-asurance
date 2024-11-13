@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Post, Session, UseInterceptors } from "@nestjs/common";
 import { AccountService } from "./account.service";
-import { AccountLoginDto, AccountStateDto, AddEmployeeAccountDto, UserSignupDto } from "../types/account";
+import { AccountLoginDto, AccountStateDto, AddEmployeeAccountDto, EmployeeListDto, UserSignupDto } from "../types/account";
 import { ActionInterceptor } from "../common/action.interceptor";
 import { SessionData } from "express-session";
 import { AllowedAccountType } from "../common/account-type.guard";
@@ -26,10 +26,18 @@ export class AccountController {
     }
 
     @AllowedAccountType("ADMIN")
-    @Post("/add-employee")
+    @Post("/employee")
     @UseInterceptors(ActionInterceptor)
-    async registerEmployee(@Body() body: AddEmployeeAccountDto) {
+    async addEmployee(@Body() body: AddEmployeeAccountDto) {
         await this.accountService.addEmployee(body.id, body.name, body.password, body.startDay, body.startTime, body.endDay, body.endTime);
+    }
+
+    @AllowedAccountType("ADMIN")
+    @Get("/employee")
+    async listEmployee(): Promise<EmployeeListDto> {
+        return {
+            list: await this.accountService.listEmployee()
+        }
     }
 
     @AllowedAccountType("NOTLOGGED")
