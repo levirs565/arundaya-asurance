@@ -3,9 +3,9 @@ import {
 } from "react-router-dom";
 import { LoginPage } from "./pages/auth/Login";
 import { RegisterPage } from "./pages/auth/Register";
-import { DashboardPage } from "./pages/DashboardPage/Dashboard";
-import { PremiPage } from "./pages/DashboardPage/Premi";
-import { ClaimPage } from "./pages/DashboardPage/Claim";
+import { DashboardPage } from "./pages/dashboard/Dashboard";
+import { PremiPage } from "./pages/dashboard/Premi";
+import { ClaimPage } from "./pages/dashboard/claim/Claim";
 import { AccountTypeGuard } from "./account-type.guard";
 
 export const router = createBrowserRouter([
