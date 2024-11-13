@@ -4,17 +4,18 @@ import { Button } from "@client/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@client/components/ui/card"
 import { Collapsible, CollapsibleContent } from "@client/components/ui/collapsible";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@client/components/ui/dropdown-menu";
+import { ClaimState } from "@prisma/client";
 import { format } from "date-fns";
 import { Check, CircleEllipsis, EllipsisVertical, FileSearch, Loader, X } from "lucide-react";
 import { useState } from "react";
 
-const claimStateMessages: Record<string, string> = {
+const claimStateMessages: Record<ClaimState, string> = {
     "NOT_ASSIGNED": 'Belum Direview',
     "ASSIGNED": 'Proses Review',
     "ACCEPTED": 'Diterima',
     "REJECTED": 'Ditolak'
 }
-const claimStateVarians: Record<string, BadgeProps["variant"]> = {
+const claimStateVarians: Record<ClaimState, BadgeProps["variant"]> = {
     "NOT_ASSIGNED": "secondary",
     "ASSIGNED": "default",
     "ACCEPTED": "default",
@@ -25,7 +26,7 @@ const claimStateIconProps = {
     className: "mr-2",
     size: 20
 };
-const claimStateIcons: Record<string, any> = {
+const claimStateIcons: Record<ClaimState, any> = {
     "NOT_ASSIGNED": <Loader {...claimStateIconProps} />,
     "ASSIGNED": <FileSearch {...claimStateIconProps} />,
     "ACCEPTED": <Check {...claimStateIconProps} />,
@@ -40,9 +41,9 @@ function Claim({ data }: { data: any }) {
             <CardTitle>{data.type}</CardTitle>
             <CardDescription>
                 {format(data.date, "dd MMMM yyyy")}
-                <Badge className="ml-2" variant={claimStateVarians[data.state]}>
-                    {claimStateIcons[data.state]}
-                    {claimStateMessages[data.state as string]}
+                <Badge className="ml-2" variant={claimStateVarians[data.state as ClaimState]}>
+                    {claimStateIcons[data.state as ClaimState]}
+                    {claimStateMessages[data.state as ClaimState]}
                 </Badge>
             </CardDescription>
         </CardHeader>

@@ -89,10 +89,5 @@ function LoginForm() {
   </Form>
 }
 export function LoginPage() {
-  const { data } = useAccountState();
-  if (data && data.account) {
-    return <Navigate to="/dashboard"></Navigate>
-  }
-
   return <LoginForm/>;
 }

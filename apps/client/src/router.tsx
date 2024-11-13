@@ -6,27 +6,38 @@ import { RegisterPage } from "./pages/auth/Register";
 import { DashboardPage } from "./pages/DashboardPage/Dashboard";
 import { PremiPage } from "./pages/DashboardPage/Premi";
 import { ClaimPage } from "./pages/DashboardPage/Claim";
+import { AccountTypeGuard } from "./account-type.guard";
 
 export const router = createBrowserRouter([
     {
         path: "/login",
-        element: <LoginPage />,
+        element: <AccountTypeGuard allowed="NOTLOGGED" redirectTo="/dashboard">
+            <LoginPage />
+        </AccountTypeGuard>,
     },
     {
         path: "/register",
-        element: <RegisterPage />,
+        element: <AccountTypeGuard allowed="NOTLOGGED" redirectTo="/dashboard">
+            <RegisterPage />
+        </AccountTypeGuard>
     },
     {
         path: "/dashboard",
-        element: <DashboardPage />,
+        element: <AccountTypeGuard allowed="LOGGED" redirectTo="/login">
+            <DashboardPage />
+        </AccountTypeGuard>,
         children: [
             {
-                path: "claim",
-                element: <ClaimPage/>
+                path: "user/claim",
+                element: <AccountTypeGuard allowed="USER" redirectTo="/dashboard">
+                    <ClaimPage />
+                </AccountTypeGuard>
             },
             {
                 path: "premi",
-                element: <PremiPage />
+                element: <AccountTypeGuard allowed="USER" redirectTo="/dashboard">  
+                    <PremiPage />
+                </AccountTypeGuard>
             }
         ]
     }

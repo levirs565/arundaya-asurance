@@ -6,14 +6,6 @@ import { Navigate, Outlet } from 'react-router-dom';
 import { useAccountState } from '@client/api/account';
 
 export function DashboardPage() {
-  const { isLoading, data } = useAccountState();
-
-  if (isLoading) return <></>
-
-  if (data && !data.account) {
-    return <Navigate to="/login" />
-  }
-
   return (
     <SidebarProvider>
       <AppSidebar />

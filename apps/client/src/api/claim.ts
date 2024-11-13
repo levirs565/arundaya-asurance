@@ -2,19 +2,19 @@ import useSWR from "swr";
 import { fetcher, httpDelete, post, put } from "./common";
 import useSWRMutation from "swr/mutation";
 
-const listKey = "/claim";
+const listKey = "/user/claim";
 
 export const useClaimMake = () => useSWRMutation(
     listKey,
-    (key, { arg }) => post("/claim", arg)
+    (key, { arg }) => post("/user/claim", arg)
 );
 export const useClaimList = () => useSWR(listKey, fetcher);
-export const useClaimById = (id: number) => useSWR(`/claim/${id}`, fetcher);
+export const useClaimById = (id: number) => useSWR(`/user/claim/${id}`, fetcher);
 export const useClaimDelete = (id: number) => useSWRMutation(
-    `/claim/${id}`,
-    () => httpDelete(`/claim/${id}`)
+    `/user/claim/${id}`,
+    () => httpDelete(`/user/claim/${id}`)
 )
 export const useClaimEdit = (id: number) => useSWRMutation(
-    `/claim/${id}`,
-    (key, { arg }) => put(`/claim/${id}`, arg)
+    `/user/claim/${id}`,
+    (key, { arg }) => put(`/user/claim/${id}`, arg)
 )

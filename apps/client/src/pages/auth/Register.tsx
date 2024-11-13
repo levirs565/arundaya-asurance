@@ -273,8 +273,5 @@ function RegisterForm() {
   </Form>
 }
 export function RegisterPage() {
-  const { data } = useAccountState();
-  if (data && data.account) return <Navigate to="/dashboard" />
-
   return <RegisterForm/>;
 }
