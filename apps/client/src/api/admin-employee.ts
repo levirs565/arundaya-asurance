@@ -1,9 +1,12 @@
 import useSWRMutation from "swr/mutation";
-import { post } from "./common";
+import { fetcher, post } from "./common";
+import useSWR from "swr";
 
-const employeeListKey = "/employee";
+const employeeListKey = "/account/employee";
 
 export const useAccountAddEmployee = () => useSWRMutation(
     employeeListKey, 
-    (key, { arg }) => post("/account/add-employee", arg)
+    (key, { arg }) => post("/account/employee", arg)
 );
+
+export const useAccountListEmployee = () => useSWR(employeeListKey, fetcher);
