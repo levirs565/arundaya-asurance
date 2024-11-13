@@ -21,7 +21,7 @@ const data = {
         },
         {
             title: "Claim",
-            url: "/dashboard/claim",
+            url: "/dashboard/user/claim",
         }
     ]
 }

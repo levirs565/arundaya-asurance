@@ -70,6 +70,6 @@ export function ClaimList() {
     const { data } = useClaimList();
 
     return <div className="space-y-2">
-        {data && data.map((data: any) => <Claim data={data} key={data.id} />)}
+        {data && data.list.map((data: any) => <Claim data={data} key={data.id} />)}
     </div>
 }

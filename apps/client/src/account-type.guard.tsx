@@ -25,7 +25,7 @@ export function AccountTypeGuard({ allowed, redirectTo, children }: { allowed: A
         return children;
     }
 
-    if (allowed != data.account) {
+    if (allowed != data.account.type) {
         return <Navigate to={redirectTo}/>
     }
 
