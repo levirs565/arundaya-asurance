@@ -7,6 +7,7 @@ import { DashboardPage } from "./pages/dashboard/Dashboard";
 import { PremiPage } from "./pages/dashboard/Premi";
 import { ClaimPage } from "./pages/dashboard/user/claim/Claim";
 import { AccountTypeGuard } from "./account-type.guard";
+import { AdminEmployeePage } from "./pages/dashboard/admin/employee/Employee";
 
 export const router = createBrowserRouter([
     {
@@ -37,6 +38,12 @@ export const router = createBrowserRouter([
                 path: "premi",
                 element: <AccountTypeGuard allowed="USER" redirectTo="/dashboard">  
                     <PremiPage />
+                </AccountTypeGuard>
+            },
+            {
+                path: "admin/employee",
+                element: <AccountTypeGuard allowed="ADMIN" redirectTo="/dashboard">
+                    <AdminEmployeePage/>
                 </AccountTypeGuard>
             }
         ]

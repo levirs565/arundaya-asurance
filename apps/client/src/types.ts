@@ -1,4 +1,4 @@
-import { 
+import {
     type Account,
     type AccountType,
     type Claim,
@@ -9,10 +9,17 @@ import {
     type Premi,
     type Employee,
     type PremiState,
-    type UserClass, 
+    type UserClass,
 } from "@prisma/client";
 
 type AllowedAccountType = "LOGGED" | "NOTLOGGED" | AccountType;
+const dayEnums: [string, string, string, string, string, string, string] = ['Sunday',
+    'Monday',
+    'Tuesday',
+    'Wednesday',
+    'Thursday',
+    'Friday',
+    'Saturday'];
 
 export {
     Account,
@@ -26,5 +33,6 @@ export {
     Premi,
     Employee,
     PremiState,
-    UserClass
+    UserClass,
+    dayEnums
 }
