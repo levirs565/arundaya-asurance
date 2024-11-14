@@ -12,6 +12,7 @@ import { PremiModule } from '../premi/premi.module';
 import { AccountTypeGuard } from '../common/account-type.guard';
 import { ClaimModule } from '../claim/claim.module';
 import { ClaimEmployeeModule } from '../claim-employee/claim-employee.module';
+import { AdminEmployeeModule } from '../admin-employee/admin-employee.module';
 
 @Module({
   imports: [
@@ -22,7 +23,12 @@ import { ClaimEmployeeModule } from '../claim-employee/claim-employee.module';
     ClaimUserModule,
     ClaimEmployeeModule,
     PremiModule,
+    AdminEmployeeModule,
     RouterModule.register([
+      {
+        path: "admin/employee",
+        module: AdminEmployeeModule
+      },
       {
         path: "account",
         module: AccountModule
@@ -38,6 +44,10 @@ import { ClaimEmployeeModule } from '../claim-employee/claim-employee.module';
       {
         path: "premi",
         module: PremiModule
+      },
+      {
+        path: "admin/employee",
+        module: AdminEmployeeModule
       }
     ])
   ],

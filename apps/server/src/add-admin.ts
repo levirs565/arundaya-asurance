@@ -4,6 +4,8 @@ import { AppModule } from "./app/app.module";
 import { AccountModule } from "./account/account.module";
 import { AccountService } from "./account/account.service";
 import "./types/session";
+import { AccountManagerService } from "./account/account-manager.service";
+import { AccountType } from "@prisma/client";
 
 const { values: {id, name, password} } = parseArgs({
     options: {
@@ -28,9 +30,14 @@ if (!name || !id || !password) {
 async function bootstrap() {
     const app = await NestFactory.createApplicationContext(AppModule);
 
-    const accountService = app.select(AccountModule).get(AccountService);
+    const accountService = app.select(AccountModule).get(AccountManagerService);
 
-    await accountService.addAdmin(id, name, password);
+    await accountService.addAccount({
+        id,
+        name,
+        password,
+        type: AccountType.ADMIN
+    });
 
     await app.close();
 }

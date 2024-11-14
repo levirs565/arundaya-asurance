@@ -25,21 +25,6 @@ export class AccountController {
         )
     }
 
-    @AllowedAccountType("ADMIN")
-    @Post("/employee")
-    @UseInterceptors(ActionInterceptor)
-    async addEmployee(@Body() body: AddEmployeeAccountDto) {
-        await this.accountService.addEmployee(body.id, body.name, body.password, body.startDay, body.startTime, body.endDay, body.endTime);
-    }
-
-    @AllowedAccountType("ADMIN")
-    @Get("/employee")
-    async listEmployee(): Promise<EmployeeListDto> {
-        return {
-            list: await this.accountService.listEmployee()
-        }
-    }
-
     @AllowedAccountType("NOTLOGGED")
     @Post("/login")
     @UseInterceptors(ActionInterceptor)
