@@ -11,10 +11,10 @@ export const useClaimMake = () => useSWRMutation(
 export const useClaimList = () => useSWR(listKey, fetcher);
 export const useClaimById = (id: number) => useSWR(`/user/claim/${id}`, fetcher);
 export const useClaimDelete = (id: number) => useSWRMutation(
-    `/user/claim/${id}`,
+    listKey,
     () => httpDelete(`/user/claim/${id}`)
 )
 export const useClaimEdit = (id: number) => useSWRMutation(
-    `/user/claim/${id}`,
-    (key, { arg }) => put(`/user/claim/${id}`, arg)
+    listKey,
+    (key, { arg }) => put(`/user/claim/${id}`, arg),
 )

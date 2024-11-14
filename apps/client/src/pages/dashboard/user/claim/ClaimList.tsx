@@ -7,7 +7,8 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { ClaimState } from "@prisma/client";
 import { format } from "date-fns";
 import { Check, CircleEllipsis, EllipsisVertical, FileSearch, Loader, X } from "lucide-react";
-import { useState } from "react";
+import { useRef, useState } from "react";
+import { ClaimEditDialog } from "./ClaimDialog";
 
 const claimStateMessages: Record<ClaimState, string> = {
     "NOT_ASSIGNED": 'Belum Direview',
@@ -35,6 +36,7 @@ const claimStateIcons: Record<ClaimState, any> = {
 
 function Claim({ data }: { data: any }) {
     const [detail, setDetail] = useState(false);
+    const deleteDivRef = useRef<HTMLDivElement>(null);
 
     return <Card>
         <CardHeader>
@@ -70,11 +72,15 @@ function Claim({ data }: { data: any }) {
                     </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
-                    <DropdownMenuItem>Ubah</DropdownMenuItem>
+                    <DropdownMenuItem onSelect={() => deleteDivRef.current?.click()}>Ubah</DropdownMenuItem>
                     <DropdownMenuItem>Batalkan</DropdownMenuItem>
                 </DropdownMenuContent>
             </DropdownMenu>
         </CardFooter>
+
+        <ClaimEditDialog id={data.id}>
+            <div ref={deleteDivRef}></div>
+        </ClaimEditDialog>
     </Card >
 
 }

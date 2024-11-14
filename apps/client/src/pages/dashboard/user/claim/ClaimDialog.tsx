@@ -7,8 +7,8 @@ import { Button } from "@client/components/ui/button";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@client/components/ui/form";
 import { Input } from "@client/components/ui/input";
 import { Textarea } from "@client/components/ui/textarea";
-import { useClaimMake } from "@client/api/claim";
-import { useState } from "react";
+import { useClaimMake, useClaimEdit, useClaimById } from "@client/api/claim";
+import { forwardRef, useState, useEffect, useMemo } from "react";
 import { ErrorLabel } from "@client/components/label";
 
 const formSchema = z.object({
@@ -23,13 +23,15 @@ interface ClaimDialogContentProps {
     error: any,
     isMutating: boolean,
     setOpen: (open: boolean) => void
+    title: string
+    positiveButton: string
 }
-export function ClaimDialogContent({ form, onSubmit, reset, error, setOpen, isMutating }: ClaimDialogContentProps) {
-    return <DialogContent tag="form" onSubmit={form.handleSubmit(onSubmit, reset)}>
+const ClaimDialogContent = forwardRef<React.ElementRef<typeof DialogContent>, ClaimDialogContentProps>(({ form, onSubmit, reset, error, setOpen, isMutating, title, positiveButton }, ref) => {
+    return <DialogContent ref={ref} tag="form" onSubmit={form.handleSubmit(onSubmit, reset)}>
         <Form {...form}>
             <DialogHeader>
-                <DialogTitle>Ajukan Klaim</DialogTitle>
-                <DialogDescription>Formulir Pengajuan Klaim</DialogDescription>
+                <DialogTitle>{title}</DialogTitle>
+                <DialogDescription> </DialogDescription>
             </DialogHeader>
 
             <div className="space-y-2">
@@ -85,7 +87,7 @@ export function ClaimDialogContent({ form, onSubmit, reset, error, setOpen, isMu
             </div>
 
             <DialogFooter>
-                <Button type="submit" disabled={isMutating}>Ajukan</Button>
+                <Button type="submit" disabled={isMutating}>{positiveButton}</Button>
                 <Button type="button" disabled={isMutating} variant="outline" onClick={() => {
                     form.reset();
                     setOpen(false);
@@ -93,9 +95,10 @@ export function ClaimDialogContent({ form, onSubmit, reset, error, setOpen, isMu
             </DialogFooter>
         </Form>
     </DialogContent>
-}
+})
+ClaimDialogContent.displayName = "ClaimDialogContent";
 
-export function ClaimAddDialogContent({ setOpen }: { setOpen: (open: boolean) => void }) {
+const ClaimAddDialogContent = forwardRef<React.ElementRef<typeof ClaimDialogContent>, { setOpen: (open: boolean) => void }>(({ setOpen }, ref) => {
     const { trigger, isMutating, error, reset } = useClaimMake();
 
     const form = useForm<z.infer<typeof formSchema>>({
@@ -116,8 +119,52 @@ export function ClaimAddDialogContent({ setOpen }: { setOpen: (open: boolean) =>
         })
     }
 
-    return <ClaimDialogContent error={error} form={form} isMutating={isMutating} onSubmit={onSubmit} reset={reset} setOpen={setOpen} ></ClaimDialogContent>
-}
+    return <ClaimDialogContent title="Ajukan Klaim" positiveButton="Ajukan" ref={ref} error={error} form={form} isMutating={isMutating} onSubmit={onSubmit} reset={reset} setOpen={setOpen} ></ClaimDialogContent>
+})
+
+ClaimAddDialogContent.displayName = "ClaimAddDialogContent";
+
+const ClaimEditDialogContent = forwardRef<React.ElementRef<typeof ClaimAddDialogContent>, { id: number, setOpen: (open: boolean) => void }>(({ id, setOpen }, ref) => {
+    const { trigger, isMutating, error, reset } = useClaimEdit(id);
+    const { data } = useClaimById(id);
+    const currentData = useMemo(() => {
+        if (!data) {
+            return {
+                type: "",
+                hospital: "",
+                description: ""
+            }
+        }
+        return {
+            type: data.type,
+            hospital: data.hospital,
+            description: data.description
+        }
+    }, [data]);
+
+    const form = useForm<z.infer<typeof formSchema>>({
+        resolver: zodResolver(formSchema),
+        defaultValues: currentData
+
+    });
+    useEffect(() => {
+        form.reset(currentData);
+    }, [data])
+
+    function onSubmit(data: any) {
+        trigger(data, {
+            onSuccess: () => {
+                setOpen(false);
+                form.reset();
+            }
+        })
+    }
+
+    return <ClaimDialogContent title="Ubah Data Klaim" positiveButton="Ubah
+    
+    " ref={ref} error={error} form={form} isMutating={isMutating} onSubmit={onSubmit} reset={reset} setOpen={setOpen} ></ClaimDialogContent>
+})
+ClaimEditDialogContent.displayName = "ClaimEditDialogContent"
 
 export function ClaimAddDialog({ children }: { children: any }) {
     const [open, setOpen] = useState(false);
@@ -126,8 +173,20 @@ export function ClaimAddDialog({ children }: { children: any }) {
         <DialogTrigger asChild>{children}</DialogTrigger>
         <DialogContentWrapper>
             <ClaimAddDialogContent setOpen={setOpen}>
-                
+
             </ClaimAddDialogContent>
+        </DialogContentWrapper>
+    </Dialog >
+}
+
+export function ClaimEditDialog({ id, children }: { id: number, children: any }) {
+    const [open, setOpen] = useState(false);
+
+    return <Dialog open={open} onOpenChange={setOpen}>
+        <DialogTrigger asChild>{children}</DialogTrigger>
+        <DialogContentWrapper>
+            <ClaimEditDialogContent id={id} setOpen={setOpen}>
+            </ClaimEditDialogContent>
         </DialogContentWrapper>
     </Dialog >
 }

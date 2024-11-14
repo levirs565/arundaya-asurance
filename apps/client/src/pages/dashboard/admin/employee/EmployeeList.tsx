@@ -4,8 +4,12 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@client/components/ui/dropdown-menu";
 import { formatTime } from "@client/lib/utils";
 import { Clock, EllipsisVertical } from "lucide-react";
+import { EmployeeEditDialog } from "./EmployeeDialog";
+import { useRef } from "react";
 
-function Employee({data}: {data: any}) {
+function Employee({ data }: { data: any }) {
+    const deleteDivRef = useRef<HTMLDivElement>(null);
+
     return <Card>
         <CardHeader>
             <CardTitle>{data.name}</CardTitle>
@@ -18,17 +22,21 @@ function Employee({data}: {data: any}) {
             </div>
         </CardContent>
         <CardFooter>
-            <DropdownMenu>
+            <DropdownMenu modal={false}>
                 <DropdownMenuTrigger asChild>
                     <Button variant="ghost">
-                        <EllipsisVertical/>
+                        <EllipsisVertical />
                     </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
-                    <DropdownMenuItem>Ubah</DropdownMenuItem>
+                        <DropdownMenuItem onSelect={() => deleteDivRef.current?.click()}>Ubah</DropdownMenuItem>
                 </DropdownMenuContent>
             </DropdownMenu>
         </CardFooter>
+
+        <EmployeeEditDialog id={data.id}>
+            <div ref={deleteDivRef}></div>
+        </EmployeeEditDialog>
     </Card>
 }
 
@@ -36,6 +44,6 @@ export function EmployeeList() {
     const { data } = useAccountListEmployee();
 
     return <div className="space-y-2">
-        {data && data.list.map((employee: any) => <Employee key={employee.id} data={employee}/>)}
+        {data && data.list.map((employee: any) => <Employee key={employee.id} data={employee} />)}
     </div>
 }
