@@ -38,7 +38,7 @@ export class AccountManagerService {
     }
 
     async checkPassword(hash: string, password: string): Promise<boolean> {
-        return await compare(password, password);
+        return await compare(password, hash);
     }
 
     async updateAccount(
@@ -49,7 +49,6 @@ export class AccountManagerService {
         if (password) {
             data.passwordHash = await this.hashPassword(password);
         }
-
         await this.prismaClient.account.update({
             where: {
                 id

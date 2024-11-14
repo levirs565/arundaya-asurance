@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Param, ParseIntPipe, Post, Put, UseInterceptors } from "@nestjs/common";
 import { AllowedAccountType } from "../common/account-type.guard";
 import { ActionInterceptor } from "../common/action.interceptor";
-import { AddEmployeeAccountDto, EmployeeListDto, EmployeeUpdateDto } from "../types/account";
+import { AddEmployeeAccountDto, EmployeeDataDto, EmployeeListDto, EmployeeUpdateDto } from "../types/account";
 import { AdminEmployeeService } from "./admin-employee.service";
 
 @Controller()
@@ -26,5 +26,10 @@ export class AdminEmployeeController {
     @UseInterceptors(ActionInterceptor)
     async edit(@Param("id") id: string, @Body() body: EmployeeUpdateDto) {
         await this.employeeService.updateEmployee(id, body.name, body.password, body.startDay, body.startTime, body.endDay, body.endTime);
+    }
+
+    @Get("/:id")
+    async get(@Param("id") id: string): Promise<EmployeeDataDto> {
+        return await this.employeeService.get(id);
     }
 }

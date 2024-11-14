@@ -55,8 +55,7 @@ export class AccountService {
     if (!account) {
       throw new CommonServiceException("Account not found");
     }
-    const matched = this.accountManager.checkPassword(account.passwordHash, password);
-
+    const matched = await this.accountManager.checkPassword(account.passwordHash, password);
     if (!matched) {
       throw new CommonServiceException("Invalid Password!")
     }

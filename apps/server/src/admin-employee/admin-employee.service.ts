@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { AccountType, Day } from "@prisma/client";
+import { AccountType, Day, Employee } from "@prisma/client";
 import { PrismaService } from "../prisma/prisma.service";
 import { AccountManagerService } from "../account/account-manager.service";
 import { EmployeeDataDto } from "../types/account";
@@ -57,6 +57,33 @@ export class AdminEmployeeService {
     }))
   }
 
+  async get(id: string): Promise<EmployeeDataDto> {
+    const { account, startDay, startTime, endDay, endTime } = (await this.prismaClient.employee.findUnique({
+      where: {
+        id
+      }, select: {
+        account: {
+          select: {
+            name: true
+          }
+        },
+        startDay: true,
+        startTime: true,
+        endDay: true,
+        endTime: true
+      }
+    }))
+
+    return {
+      name: account.name,
+      id,
+      startDay,
+      startTime,
+      endDay,
+      endTime
+    }
+  }
+
   async updateEmployee(
     id: string,
     name: string,
@@ -66,6 +93,20 @@ export class AdminEmployeeService {
     endDay: Day,
     endTime: Date
   ) {
+    const account = await this.prismaClient.account.findUnique({
+      where: {
+        id
+      },
+      select: {
+        type: true
+      }
+    })
+
+    if (account.type != AccountType.EMPLOYEE) {
+      throw new Error("Cannot set non employee password");
+    }
+
+
     await this.accountManager.updateAccount(id, {
       name,
       password,
