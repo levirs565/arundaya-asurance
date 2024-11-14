@@ -7,9 +7,11 @@ import { Button } from "@client/components/ui/button";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@client/components/ui/form";
 import { Input } from "@client/components/ui/input";
 import { Textarea } from "@client/components/ui/textarea";
-import { useClaimMake, useClaimEdit, useClaimById } from "@client/api/claim";
+import { useClaimMake, useClaimEdit, useClaimById, useClaimDelete } from "@client/api/claim";
 import { forwardRef, useState, useEffect, useMemo } from "react";
 import { ErrorLabel } from "@client/components/label";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger, } from "@client/components/ui/alert-dialog"
+
 
 const formSchema = z.object({
     type: z.string().min(2, { message: "Minimal terdiri dari 2 karakter." }),
@@ -189,4 +191,32 @@ export function ClaimEditDialog({ id, children }: { id: number, children: any })
             </ClaimEditDialogContent>
         </DialogContentWrapper>
     </Dialog >
+}
+
+export function ClaimDeleteDialog({ id, children }: { id: number, children: any }) {
+    const [open, setOpen] = useState(false);
+    const { trigger, isMutating, error } = useClaimDelete(id);
+
+    return <AlertDialog open={open} onOpenChange={setOpen}>
+        <AlertDialogTrigger asChild>{children}</AlertDialogTrigger>
+        <AlertDialogContent>
+            <AlertDialogHeader>
+                <AlertDialogTitle>Konfirmasi Pembatalan</AlertDialogTitle>
+                <AlertDialogDescription>
+                    Apakah anda yakin ingin membatalkan klaim?
+                </AlertDialogDescription>
+            </AlertDialogHeader>
+            {error && <ErrorLabel text={error.message} />}
+            <AlertDialogFooter>
+                <AlertDialogCancel disabled={isMutating} >Batal</AlertDialogCancel>
+                <AlertDialogAction disabled={isMutating} onClick={(e) => {
+                    trigger(null, {
+                        onSuccess: () => setOpen(false)
+                    })
+                    e.preventDefault()
+                }}>Konfirmasi</AlertDialogAction>
+            </AlertDialogFooter>
+        </AlertDialogContent>
+    </AlertDialog>
+
 }

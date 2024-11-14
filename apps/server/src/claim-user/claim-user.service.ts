@@ -35,6 +35,10 @@ export class ClaimUserService {
         const claim = await this.claimService.findClaim(id);
         this.validateClaimOwner(claim, account)
 
+        if (claim.state != ClaimState.NOT_ASSIGNED) {
+            throw new CommonServiceException("You can only delete unassigned claim")
+        }
+
         await this.prismaClient.claim.delete({
             where: { id }
         })
@@ -68,7 +72,7 @@ export class ClaimUserService {
 
         // TODO: Add last edit time
         await this.prismaClient.claim.update({
-            where: {id},
+            where: { id },
             data: {
                 description,
                 hospital,

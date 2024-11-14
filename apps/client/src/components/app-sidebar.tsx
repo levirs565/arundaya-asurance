@@ -39,8 +39,12 @@ const navMain: Record<AccountType, NavItem[]> = {
     ],
     "EMPLOYEE": [
         {
-            "title": "Claim",
-            url: "/dashboard/employee/claim"
+            "title": "Ambil Claim",
+            url: "/dashboard/employee/claim-available"
+        },
+        {
+            "title": "Review Klaim",
+            url: "/dashboard/employee/claim-assigned"
         }
     ]
 }

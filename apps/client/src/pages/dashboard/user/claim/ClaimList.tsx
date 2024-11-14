@@ -8,7 +8,8 @@ import { ClaimState } from "@prisma/client";
 import { format } from "date-fns";
 import { Check, CircleEllipsis, EllipsisVertical, FileSearch, Loader, X } from "lucide-react";
 import { useRef, useState } from "react";
-import { ClaimEditDialog } from "./ClaimDialog";
+import { ClaimEditDialog, ClaimDeleteDialog } from "./ClaimDialog";
+
 
 const claimStateMessages: Record<ClaimState, string> = {
     "NOT_ASSIGNED": 'Belum Direview',
@@ -36,6 +37,7 @@ const claimStateIcons: Record<ClaimState, any> = {
 
 function Claim({ data }: { data: any }) {
     const [detail, setDetail] = useState(false);
+    const editDivRef = useRef<HTMLDivElement>(null);
     const deleteDivRef = useRef<HTMLDivElement>(null);
 
     return <Card>
@@ -58,12 +60,16 @@ function Claim({ data }: { data: any }) {
 
                     <p className="text-sm font-bold mt-4">Deskripsi</p>
                     <p>{data.description}</p>
+
+                    {data.reviewMessage && <><p className="text-sm font-bold mt-4">Review</p>
+                        <p>{data.reviewMessage}</p></>}
+
                 </CardContent>
             </CollapsibleContent>
         </Collapsible>
         <CardFooter>
             <Button onClick={() => setDetail((value) => !value)}>{detail ? "Urungkan Detail" : "Tampilkan Detail"}</Button>
-            <DropdownMenu>
+            {data.state == "NOT_ASSIGNED" && <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                     <Button className="ml-2" variant="ghost">
                         <EllipsisVertical>
@@ -72,15 +78,18 @@ function Claim({ data }: { data: any }) {
                     </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
-                    <DropdownMenuItem onSelect={() => deleteDivRef.current?.click()}>Ubah</DropdownMenuItem>
-                    <DropdownMenuItem>Batalkan</DropdownMenuItem>
+                    <DropdownMenuItem onSelect={() => editDivRef.current?.click()}>Ubah</DropdownMenuItem>
+                    <DropdownMenuItem onSelect={() => deleteDivRef.current?.click()}>Batalkan</DropdownMenuItem>
                 </DropdownMenuContent>
-            </DropdownMenu>
+            </DropdownMenu>}
         </CardFooter>
 
         <ClaimEditDialog id={data.id}>
-            <div ref={deleteDivRef}></div>
+            <div ref={editDivRef}></div>
         </ClaimEditDialog>
+        <ClaimDeleteDialog id={data.id}>
+            <div ref={deleteDivRef}></div>
+        </ClaimDeleteDialog>
     </Card >
 
 }
