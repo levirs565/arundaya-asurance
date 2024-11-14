@@ -61,6 +61,19 @@ function Claim({ data }: { data: any }) {
         </Collapsible>
         <CardFooter>
             <Button onClick={() => setDetail((value) => !value)}>{detail ? "Urungkan Detail" : "Tampilkan Detail"}</Button>
+            <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                    <Button className="ml-2" variant="ghost">
+                        <EllipsisVertical>
+
+                        </EllipsisVertical>
+                    </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent>
+                    <DropdownMenuItem>Ubah</DropdownMenuItem>
+                    <DropdownMenuItem>Batalkan</DropdownMenuItem>
+                </DropdownMenuContent>
+            </DropdownMenu>
         </CardFooter>
     </Card >
 

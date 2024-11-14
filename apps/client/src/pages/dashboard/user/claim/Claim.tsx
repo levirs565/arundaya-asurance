@@ -1,5 +1,5 @@
 import { Button } from "@client/components/ui/button";
-import { ClaimAddDialog } from "./ClaimAddDialog";
+import { ClaimAddDialog } from "./ClaimDialog";
 import { ClaimList } from "./ClaimList";
 import { AppBar, AppBarTitle } from "@client/components/app-bar";
 

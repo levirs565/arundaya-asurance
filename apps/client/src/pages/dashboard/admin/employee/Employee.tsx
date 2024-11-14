@@ -1,5 +1,5 @@
 import { AppBar, AppBarTitle } from "@client/components/app-bar";
-import { EmployeeAddDialog } from "./EmployeeAddDialog";
+import { EmployeeAddDialog } from "./EmployeeDialog";
 import { Button } from "@client/components/ui/button";
 import { EmployeeList } from "./EmployeeList";
 

@@ -1,8 +1,9 @@
 import { useAccountListEmployee } from "@client/api/admin-employee";
 import { Button } from "@client/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@client/components/ui/card";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@client/components/ui/dropdown-menu";
 import { formatTime } from "@client/lib/utils";
-import { Clock } from "lucide-react";
+import { Clock, EllipsisVertical } from "lucide-react";
 
 function Employee({data}: {data: any}) {
     return <Card>
@@ -17,6 +18,16 @@ function Employee({data}: {data: any}) {
             </div>
         </CardContent>
         <CardFooter>
+            <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                    <Button variant="ghost">
+                        <EllipsisVertical/>
+                    </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent>
+                    <DropdownMenuItem>Ubah</DropdownMenuItem>
+                </DropdownMenuContent>
+            </DropdownMenu>
         </CardFooter>
     </Card>
 }
