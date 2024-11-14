@@ -49,3 +49,13 @@ export interface EmployeeDataDto {
 export interface EmployeeListDto {
     list: EmployeeDataDto[]
 }
+
+export interface EmployeeUpdateDto {
+    id: string,
+    name: string,
+    password?: string,
+    startDay: Day,
+    startTime: Date,
+    endDay: Day,
+    endTime: Date
+}
