@@ -9,6 +9,30 @@ import { Claim, ClaimState } from "@prisma/client";
 export class ClaimEmployeeService {
     constructor(private readonly prismaClient: PrismaService, private readonly claimService: ClaimService) {}
 
+    async listAssigned(account: AccountData): Promise<Claim[]> {
+        return await this.prismaClient.claim.findMany({
+            where: {
+                state: ClaimState.ASSIGNED,
+                assignedEmployeeId: account.id
+            },
+            orderBy: {
+                date: "desc"
+            }
+        })
+    }
+
+    async listAvailable(): Promise<Claim[]> {
+        return await this.prismaClient.claim.findMany({
+            where: {
+                state: ClaimState.NOT_ASSIGNED
+            },
+            orderBy: {
+                date: "desc"
+            },
+            take: 10
+        })
+    }
+
     async take(id: number, account: AccountData) {
         const claim = await this.claimService.findClaim(id);
 
