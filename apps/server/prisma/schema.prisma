@@ -31,7 +31,7 @@ enum UserClass {
 model ClassData {
   name        UserClass @id
   premiAmount Int
-  users        User[]
+  users       User[]
 }
 
 model User {
@@ -81,10 +81,11 @@ model Claim {
   user               User     @relation(fields: [userNik], references: [nik])
   assignedEmployeeId String?
 
-  description String
-  hospital    String
-  type        String
-  state       ClaimState
+  description   String
+  hospital      String
+  type          String
+  state         ClaimState
+  reviewMessage String?     @db.LongText
 }
 
 enum PremiState {

@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { Input } from '@client/components/ui/input';
 import { Button } from '@client/components/ui/button';
-import { PremiPay } from '@client/pages/DashboardPage/PremiPay'
-import { PremiHistory } from '@client/pages/DashboardPage/PremiHistory'
+import { PremiPay } from '@client/pages/dashboard/PremiPay'
+import { PremiHistory } from '@client/pages/dashboard/PremiHistory'
 import {
     Card,
     CardContent,

@@ -11,21 +11,47 @@ import {
     SidebarFooter,
 } from "@client/components/ui/sidebar"
 import { AccountAction } from "./account-action"
-import { Link, NavLink } from "react-router-dom"
+import { NavLink } from "react-router-dom"
+import { useAccountState } from "@client/api/account"
+import { AccountType } from "@client/types"
 
-const data = {
-    navMain: [
+interface NavItem {
+    title: string,
+    url: string,
+}
+
+const navMain: Record<AccountType, NavItem[]> = {
+    "ADMIN": [
+        {
+            title: "Pegawai",
+            url: "/dashboard/admin/employee"
+        },
+    ],
+    "USER": [
         {
             title: "Premi",
             url: "/dashboard/premi",
         },
         {
             title: "Claim",
-            url: "/dashboard/claim",
+            url: "/dashboard/user/claim",
+        }
+    ],
+    "EMPLOYEE": [
+        {
+            "title": "Ambil Claim",
+            url: "/dashboard/employee/claim-available"
+        },
+        {
+            "title": "Review Klaim",
+            url: "/dashboard/employee/claim-assigned"
         }
     ]
 }
+
 export function AppSidebar() {
+    const { data } = useAccountState();
+
     return (
         <Sidebar>
             <SidebarHeader>
@@ -34,7 +60,7 @@ export function AppSidebar() {
 
             <SidebarContent>
                 <SidebarMenu>
-                    {data.navMain.map((item) => (
+                    {navMain[data.account.type as AccountType].map((item) => (
                         <SidebarMenuItem key={item.title}>
                             <NavLink to={item.url}>
                                 {({ isActive }) => (

@@ -1,21 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { genSalt, hash, compare } from "bcrypt";
-import SessionData from '../types/session';
-import { AccountType, UserClass } from '@prisma/client';
+import { AccountType, Day, Employee, UserClass } from '@prisma/client';
 import { CommonServiceException } from '../common/common-service.exception';
-import { validateAccountLoggedIn } from '../common/service.helper'
-
-const saltRounds = 10;
+import { AccountData, EmployeeDataDto } from '../types/account';
+import { AccountManagerService } from './account-manager.service';
 
 @Injectable()
 export class AccountService {
-  constructor(private readonly prismaClient: PrismaService) { }
-
-  private async hashPassword(password: string) {
-    const salt = await genSalt(saltRounds);
-    return await hash(password, salt);
-  }
+  constructor(private readonly prismaClient: PrismaService, private readonly accountManager: AccountManagerService) { }
 
   async signupUser(
     id: string,
@@ -27,14 +19,6 @@ export class AccountService {
     income: number,
     motherName: string
   ) {
-    if (await this.prismaClient.account.count({
-      where: {
-        id
-      }
-    }) > 0) {
-      throw new CommonServiceException("Account with this ID already registered");
-    }
-
     if (await this.prismaClient.user.count({
       where: {
         nik
@@ -45,31 +29,25 @@ export class AccountService {
 
     // TODO: NIK validation
 
-    await this.prismaClient.account.create({
-      data: {
-        id,
-        name,
-        passwordHash: await this.hashPassword(password),
-        type: AccountType.USER
-      }
-    });
-    await this.prismaClient.user.create({
-      data: {
-        nik,
-        accountId: id,
-        birthDate,
-        job,
-        income,
-        motherName,
-        subscriptionClass: UserClass.A
+    await this.accountManager.addAccount({
+      id,
+      name,
+      password,
+      type: AccountType.USER,
+      user: {
+        create: {
+          nik,
+          birthDate,
+          job,
+          income,
+          motherName,
+          subscriptionClass: UserClass.C
+        }
       }
     })
   }
 
-  async login(id: string, password: string, SessionData: SessionData) {
-    if (SessionData.account) {
-      throw new CommonServiceException("Already Logged in!")
-    }
+  async login(id: string, password: string): Promise<AccountData> {
     const account = await this.prismaClient.account.findUnique({
       where: { id }
     });
@@ -77,8 +55,7 @@ export class AccountService {
     if (!account) {
       throw new CommonServiceException("Account not found");
     }
-    const matched = await compare(password, account.passwordHash);
-
+    const matched = await this.accountManager.checkPassword(account.passwordHash, password);
     if (!matched) {
       throw new CommonServiceException("Invalid Password!")
     }
@@ -98,16 +75,11 @@ export class AccountService {
       nik = user.nik;
     }
 
-    SessionData.account = {
+    return {
       id,
       name: account.name,
       type: account.type,
       nik
     }
-  }
-
-  async logout(SessionData: SessionData) {
-    validateAccountLoggedIn(SessionData);
-    SessionData.account = undefined
   }
 }

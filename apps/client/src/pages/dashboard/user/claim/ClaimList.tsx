@@ -4,17 +4,20 @@ import { Button } from "@client/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@client/components/ui/card"
 import { Collapsible, CollapsibleContent } from "@client/components/ui/collapsible";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@client/components/ui/dropdown-menu";
+import { ClaimState } from "@prisma/client";
 import { format } from "date-fns";
 import { Check, CircleEllipsis, EllipsisVertical, FileSearch, Loader, X } from "lucide-react";
-import { useState } from "react";
+import { useRef, useState } from "react";
+import { ClaimEditDialog, ClaimDeleteDialog } from "./ClaimDialog";
 
-const claimStateMessages: Record<string, string> = {
+
+const claimStateMessages: Record<ClaimState, string> = {
     "NOT_ASSIGNED": 'Belum Direview',
     "ASSIGNED": 'Proses Review',
     "ACCEPTED": 'Diterima',
     "REJECTED": 'Ditolak'
 }
-const claimStateVarians: Record<string, BadgeProps["variant"]> = {
+const claimStateVarians: Record<ClaimState, BadgeProps["variant"]> = {
     "NOT_ASSIGNED": "secondary",
     "ASSIGNED": "default",
     "ACCEPTED": "default",
@@ -25,7 +28,7 @@ const claimStateIconProps = {
     className: "mr-2",
     size: 20
 };
-const claimStateIcons: Record<string, any> = {
+const claimStateIcons: Record<ClaimState, any> = {
     "NOT_ASSIGNED": <Loader {...claimStateIconProps} />,
     "ASSIGNED": <FileSearch {...claimStateIconProps} />,
     "ACCEPTED": <Check {...claimStateIconProps} />,
@@ -34,15 +37,17 @@ const claimStateIcons: Record<string, any> = {
 
 function Claim({ data }: { data: any }) {
     const [detail, setDetail] = useState(false);
+    const editDivRef = useRef<HTMLDivElement>(null);
+    const deleteDivRef = useRef<HTMLDivElement>(null);
 
     return <Card>
         <CardHeader>
             <CardTitle>{data.type}</CardTitle>
             <CardDescription>
                 {format(data.date, "dd MMMM yyyy")}
-                <Badge className="ml-2" variant={claimStateVarians[data.state]}>
-                    {claimStateIcons[data.state]}
-                    {claimStateMessages[data.state as string]}
+                <Badge className="ml-2" variant={claimStateVarians[data.state as ClaimState]}>
+                    {claimStateIcons[data.state as ClaimState]}
+                    {claimStateMessages[data.state as ClaimState]}
                 </Badge>
             </CardDescription>
         </CardHeader>
@@ -55,12 +60,36 @@ function Claim({ data }: { data: any }) {
 
                     <p className="text-sm font-bold mt-4">Deskripsi</p>
                     <p>{data.description}</p>
+
+                    {data.reviewMessage && <><p className="text-sm font-bold mt-4">Review</p>
+                        <p>{data.reviewMessage}</p></>}
+
                 </CardContent>
             </CollapsibleContent>
         </Collapsible>
         <CardFooter>
             <Button onClick={() => setDetail((value) => !value)}>{detail ? "Urungkan Detail" : "Tampilkan Detail"}</Button>
+            {data.state == "NOT_ASSIGNED" && <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                    <Button className="ml-2" variant="ghost">
+                        <EllipsisVertical>
+
+                        </EllipsisVertical>
+                    </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent>
+                    <DropdownMenuItem onSelect={() => editDivRef.current?.click()}>Ubah</DropdownMenuItem>
+                    <DropdownMenuItem onSelect={() => deleteDivRef.current?.click()}>Batalkan</DropdownMenuItem>
+                </DropdownMenuContent>
+            </DropdownMenu>}
         </CardFooter>
+
+        <ClaimEditDialog id={data.id}>
+            <div ref={editDivRef}></div>
+        </ClaimEditDialog>
+        <ClaimDeleteDialog id={data.id}>
+            <div ref={deleteDivRef}></div>
+        </ClaimDeleteDialog>
     </Card >
 
 }
@@ -69,6 +98,6 @@ export function ClaimList() {
     const { data } = useClaimList();
 
     return <div className="space-y-2">
-        {data && data.map((data: any) => <Claim data={data} key={data.id} />)}
+        {data && data.list.map((data: any) => <Claim data={data} key={data.id} />)}
     </div>
 }

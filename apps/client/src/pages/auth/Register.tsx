@@ -23,9 +23,9 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { subYears, format } from "date-fns";
 import { useAccountRegister, useAccountState } from '@client/api/account';
 import { Navigate, useNavigate } from 'react-router-dom';
-import { CurrencyInput } from '@client/components/CurrencyInput';
 import { ErrorLabel } from '@client/components/label';
 import { id } from "react-day-picker/locale"
+import { CurrencyInput } from '@client/components/ui/currency-input';
 
 const registerSchema = z.object({
   id: z.string().min(6, {
@@ -54,7 +54,7 @@ const registerSchema = z.object({
   }),
 
   income: z.number({
-    message: "Harus berupa angka"
+    message: "Harus berupa angka dan tidak boleh kosong"
   }),
 
   motherName: z.string().min(1, {
@@ -227,13 +227,15 @@ function RegisterForm() {
                 <FormField
                   control={form.control}
                   name="income"
-                  render={({ field }) =>
+                  render={({ field: { onChange, ...field }}) =>
                     <FormItem>
                       <FormLabel>Penghasilan Bulanan</FormLabel>
                       <FormControl>
                       <CurrencyInput
                         {...field}
-                        onChange={field.onChange}
+                        prefix="Rp"
+                        intlConfig={{ locale: "id-ID", currency: "IDR" }}
+                        onValueChange={(value, name, values) => onChange(values?.float)}
                       />
                       </FormControl>
                       <FormDescription>
@@ -271,8 +273,5 @@ function RegisterForm() {
   </Form>
 }
 export function RegisterPage() {
-  const { data } = useAccountState();
-  if (data && data.account) return <Navigate to="/dashboard" />
-
   return <RegisterForm/>;
 }
