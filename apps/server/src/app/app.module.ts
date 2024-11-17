@@ -14,6 +14,9 @@ import { ClaimModule } from '../claim/claim.module';
 import { ClaimEmployeeModule } from '../claim-employee/claim-employee.module';
 import { AdminEmployeeModule } from '../admin-employee/admin-employee.module';
 import { ScheduleModule } from "@nestjs/schedule";
+import { UserClassService } from '../user-class/user-class.service';
+import { UserClassModule } from '../user-class/user-class.module';
+import { UserClassController } from '../user-class/user-class.controller';
 
 @Module({
   imports: [
@@ -26,6 +29,7 @@ import { ScheduleModule } from "@nestjs/schedule";
     ClaimEmployeeModule,
     PremiModule,
     AdminEmployeeModule,
+    UserClassModule,
     RouterModule.register([
       {
         path: "admin/employee",
@@ -50,6 +54,10 @@ import { ScheduleModule } from "@nestjs/schedule";
       {
         path: "admin/employee",
         module: AdminEmployeeModule
+      },
+      {
+        path: "user/class",
+        module: UserClassModule
       }
     ])
   ],
