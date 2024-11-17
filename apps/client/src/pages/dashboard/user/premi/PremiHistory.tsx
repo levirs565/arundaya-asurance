@@ -19,6 +19,7 @@ import { format } from "date-fns";
 import { Check, CircleEllipsis, EllipsisVertical, FileSearch, Loader, X } from "lucide-react";
 import { useState } from "react";
 import { ErrorLabel } from '@client/components/label';
+import { formatCurrency } from "@client/lib/utils";
 
 const premiStateMessages: Record<string, string> = {
     "PENDING": 'Sedang Diproses',
@@ -84,6 +85,7 @@ function PremiCancelDialog({ id }: { id: any }){
     )
 }
 function Premi({ data }: { data: any }) {
+    console.log(data);
 
     return (
         <Card>
@@ -91,15 +93,20 @@ function Premi({ data }: { data: any }) {
                 <CardTitle>
                     Tanggal: {format(new Date(data.date), "dd MMMM yyyy")}
                 </CardTitle>
-                <CardDescription className="flex items-center">
-                    Status: 
-                    <Badge 
-                        className="ml-2 inline-flex items-center" 
-                        variant={premiStateVarians[data.state]}
-                    >
-                        {premiStateIcons[data.state]}
-                        {premiStateMessages[data.state]}
-                    </Badge>
+                <CardDescription className="flex flex-col">
+                    <div>
+                        Status: 
+                        <Badge 
+                            className="ml-2 inline-flex items-center" 
+                            variant={premiStateVarians[data.state]}
+                        >
+                            {premiStateIcons[data.state]}
+                            {premiStateMessages[data.state]}
+                        </Badge>
+                    </div>
+                    <div>
+                        Jumlah: {formatCurrency(data.amount)}
+                    </div>
                 </CardDescription>
             </CardHeader>
             <CardFooter>

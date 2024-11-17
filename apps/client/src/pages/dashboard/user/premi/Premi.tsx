@@ -18,43 +18,39 @@ import { PremiPay } from './PremiPay';
 import { PremiHistory } from './PremiHistory';
 import { AppBar, AppBarTitle } from '@client/components/app-bar';
 import { SidebarTrigger } from '@client/components/ui/sidebar';
+import { PremiUpgradeDialog } from './PremiUpgradeDialog';
 
 export function PremiPage() {
-    const { data } = usePremiList();
 
     return (
-        <div>
+        <div className='p-4'>
             <AppBar>
                 <SidebarTrigger/>
                 <AppBarTitle>Premi</AppBarTitle>
             </AppBar>
 
-            <div className='p-4'>
-                <div className='flex flex-col gap-4 lg:flex-row mb-4'>
-                    <Card className='grow basis-full'>
-                        <CardHeader>
-                            <CardTitle>Bayar Premi</CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                            <PremiPay>
-                                <Button>Bayar disini</Button>
-                            </PremiPay>
-                        </CardContent>
-                    </Card>
-                    <Card className='grow basis-full'>
-                        <CardHeader>
-                            <CardTitle>Upgrade Kelas Premi</CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                            <PremiPay>
-                                <Button>Upgrade disini</Button>
-                            </PremiPay>
-                        </CardContent>
-                    </Card>
-                </div>
-
-                <PremiHistory />
+            <div className='flex flex-col gap-4 lg:flex-row mb-4'>
+                <Card className='grow basis-full'>
+                    <CardHeader>
+                        <CardTitle>Bayar Premi</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <PremiPay>
+                            <Button>Bayar disini</Button>
+                        </PremiPay>
+                    </CardContent>
+                </Card>
+                <Card className='grow basis-full'>
+                    <CardHeader>
+                        <CardTitle>Upgrade Kelas Premi</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <PremiUpgradeDialog />
+                    </CardContent>
+                </Card>
             </div>
+
+            <PremiHistory />
         </div>
     );
 }
