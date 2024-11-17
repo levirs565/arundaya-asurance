@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Post, Session, UseInterceptors } from "@nestjs/common";
 import { AccountService } from "./account.service";
-import { AccountLoginDto, AccountStateDto, AddEmployeeAccountDto, EmployeeListDto, UserSignupDto } from "../types/account";
+import { AccountDataDto, AccountLoginDto, AccountStateDto, AccountUpdateDataDto, AddEmployeeAccountDto, EmployeeListDto, UserSignupDto } from "../types/account";
 import { ActionInterceptor } from "../common/action.interceptor";
 import { SessionData } from "express-session";
 import { AllowedAccountType } from "../common/account-type.guard";
@@ -8,6 +8,19 @@ import { AllowedAccountType } from "../common/account-type.guard";
 @Controller()
 export class AccountController {
     constructor(private accountService: AccountService) {}
+
+    @AllowedAccountType("LOGGED")
+    @Get("/data")
+    async getData(@Session() session: SessionData): Promise<AccountDataDto> {
+        return await this.accountService.getData(session.account);
+    }
+
+    @AllowedAccountType("LOGGED")
+    @Post("/data")
+    @UseInterceptors(ActionInterceptor)
+    async updatetData(@Session() session: SessionData, @Body() body: AccountUpdateDataDto) {
+        await this.accountService.updateData(session.account, body);
+    }
 
     @AllowedAccountType("NOTLOGGED")
     @Post("/signup-user")
