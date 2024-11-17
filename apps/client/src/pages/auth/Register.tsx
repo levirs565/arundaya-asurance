@@ -22,7 +22,7 @@ import { z } from "zod";
 import { zodResolver } from '@hookform/resolvers/zod';
 import { subYears, format } from "date-fns";
 import { useAccountRegister, useAccountState } from '@client/api/account';
-import { Navigate, useNavigate } from 'react-router-dom';
+import { Link, Navigate, useNavigate } from 'react-router-dom';
 import { ErrorLabel } from '@client/components/label';
 import { id } from "react-day-picker/locale"
 import { CurrencyInput } from '@client/components/ui/currency-input';
@@ -261,6 +261,7 @@ function RegisterForm() {
                   </FormItem>}
                 />
             </div>
+            <p>Sudah punya akun? <Link to="/login" className='underline decoration-zinc-500'>Login</Link></p>
            </div>
           </CardContent>
           <CardFooter>

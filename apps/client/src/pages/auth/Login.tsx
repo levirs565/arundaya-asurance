@@ -7,7 +7,7 @@ import { Input } from '@client/components/ui/input';
 import { z } from "zod";
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useAccountLogin, useAccountState } from '@client/api/account';
-import { Navigate } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
 import { cn } from '@client/lib/utils';
 import { error } from 'console';
 import { ErrorLabel } from '@client/components/label';
@@ -80,6 +80,7 @@ function LoginForm() {
                 </FormItem>} />
           </CardContent>
           <CardFooter className={cn("flex-col items-start gap-2")}>
+            <p>Belum punya akun? <Link to="/register" className='underline decoration-zinc-500'>Register</Link></p>
             {error && <ErrorLabel text={error.message}/>}
             <Button type='submit' disabled={isMutating}>Login</Button>
           </CardFooter>
