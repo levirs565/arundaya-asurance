@@ -15,5 +15,5 @@ export const usePremiList = () => useSWR(premiListKey, fetcher);
 export const usePremiById = (id: number) => useSWR(`/premi/${id}`, fetcher); 
 export const usePremiCancel = (id: number) => useSWRMutation(
     premiListKey,
-    (key, { arg }) => httpDelete(`premi/${id}`)
+    (key, { arg }) => httpDelete(`/premi/${id}`)
 )

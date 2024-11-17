@@ -1,12 +1,24 @@
-import { usePremiList } from "@client/api/premi"
+import { usePremiList, usePremiCancel } from "@client/api/premi"
 import { Badge, BadgeProps } from "@client/components/ui/badge";
 import { Button } from "@client/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@client/components/ui/card"
 import { Collapsible, CollapsibleContent } from "@client/components/ui/collapsible";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@client/components/ui/dropdown-menu";
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+  } from "@client/components/ui/alert-dialog"
 import { format } from "date-fns";
 import { Check, CircleEllipsis, EllipsisVertical, FileSearch, Loader, X } from "lucide-react";
 import { useState } from "react";
+import { ErrorLabel } from '@client/components/label';
 
 const premiStateMessages: Record<string, string> = {
     "PENDING": 'Sedang Diproses',
@@ -17,6 +29,7 @@ const premiStateMessages: Record<string, string> = {
 const premiStateVarians: Record<string, BadgeProps["variant"]> = {
     "PENDING": "secondary",
     "FAIL": "destructive",
+    "SUCCESS": "success"
 }
 
 const premiStateIconProps = {
@@ -30,6 +43,46 @@ const premiStateIcons: Record<string, any> = {
     "FAIL": <X {...premiStateIconProps} />
 }
 
+function PremiCancelDialog({ id }: { id: any }){
+    const { trigger, error } = usePremiCancel(id);
+    const [open, setOpen] = useState(false);
+    
+    function onSubmit(data: any) {
+        trigger(undefined, {
+            onSuccess: () => {
+                setOpen(false);
+            }
+        })
+    }
+
+    return (
+        <AlertDialog>
+            <AlertDialogTrigger>
+                <Button>Batalkan Pembayaran Disini</Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+                <AlertDialogHeader>
+                    <AlertDialogTitle>Apakah anda yakin untuk membatalkan pembayaran?</AlertDialogTitle>
+                    <AlertDialogDescription>
+                    </AlertDialogDescription>
+                </AlertDialogHeader>
+                {error && <ErrorLabel text={error.message} />}
+                <AlertDialogFooter>
+                    <Button
+                        type="button"
+                        variant="outline"
+                        onClick={() => {setOpen(false);}}
+                        >
+                        Cancel
+                    </Button>
+                    <Button type="submit" variant="destructive" onClick={onSubmit}>
+                        Lanjut
+                    </Button>
+                </AlertDialogFooter>
+            </AlertDialogContent>
+            </AlertDialog>
+    )
+}
 function Premi({ data }: { data: any }) {
 
     return (
@@ -50,6 +103,7 @@ function Premi({ data }: { data: any }) {
                 </CardDescription>
             </CardHeader>
             <CardFooter>
+                {data.state == "PENDING" && <PremiCancelDialog id={data.id}/>}
             </CardFooter>
         </Card>
     )

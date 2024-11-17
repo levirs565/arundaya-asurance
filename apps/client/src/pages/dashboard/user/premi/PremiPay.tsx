@@ -27,6 +27,7 @@ import {
     FormLabel,
     FormMessage
 } from "@client/components/ui/form";
+import { ErrorLabel } from '@client/components/label';
 
 export function PremiPay({ children }: { children: any }){
     const [open, setOpen] = useState(false);
@@ -51,11 +52,13 @@ export function PremiPay({ children }: { children: any }){
                         Bayar premi akan menarik saldo. Apakah anda ingin melanjutkan?
                     </AlertDialogDescription>
                 </AlertDialogHeader>
-
+                {error && <ErrorLabel text={error.message} />}
                 <AlertDialogFooter>
                     <Button
                         type="button"
-                        variant="outline">
+                        variant="outline"
+                        onClick={() => {setOpen(false);}}
+                        >
                         Cancel
                     </Button>
                     <Button type="submit" onClick={onSubmit}>
