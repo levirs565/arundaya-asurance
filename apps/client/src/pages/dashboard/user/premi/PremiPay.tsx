@@ -2,15 +2,17 @@ import { useState } from 'react';
 import { Input } from '@client/components/ui/input';
 import { Button } from '@client/components/ui/button';
 import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogHeader,
-    DialogFooter,
-    DialogTitle,
-    DialogTrigger,
-    DialogClose,
-  } from "@client/components/ui/dialog"
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+  } from "@client/components/ui/alert-dialog"
+  
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -25,6 +27,7 @@ import {
     FormLabel,
     FormMessage
 } from "@client/components/ui/form";
+import { ErrorLabel } from '@client/components/label';
 
 export function PremiPay({ children }: { children: any }){
     const [open, setOpen] = useState(false);
@@ -40,27 +43,29 @@ export function PremiPay({ children }: { children: any }){
     }
 
     return (
-        <Dialog open={open} onOpenChange={setOpen}>
-            <DialogTrigger asChild>{children}</DialogTrigger>
-            <DialogContent>
-                <DialogHeader>
-                    <DialogTitle>Apakah anda yakin?</DialogTitle>
-                    <DialogDescription>
+        <AlertDialog open={open} onOpenChange={setOpen}>
+            <AlertDialogTrigger asChild>{children}</AlertDialogTrigger>
+            <AlertDialogContent>
+                <AlertDialogHeader>
+                    <AlertDialogTitle>Apakah anda yakin?</AlertDialogTitle>
+                    <AlertDialogDescription>
                         Bayar premi akan menarik saldo. Apakah anda ingin melanjutkan?
-                    </DialogDescription>
-                </DialogHeader>
-
-                <DialogFooter>
+                    </AlertDialogDescription>
+                </AlertDialogHeader>
+                {error && <ErrorLabel text={error.message} />}
+                <AlertDialogFooter>
                     <Button
                         type="button"
-                        variant="outline">
+                        variant="outline"
+                        onClick={() => {setOpen(false);}}
+                        >
                         Cancel
                     </Button>
                     <Button type="submit" onClick={onSubmit}>
                         Lanjut
                     </Button>
-                </DialogFooter>
-            </DialogContent>
-        </Dialog>
+                </AlertDialogFooter>
+            </AlertDialogContent>
+        </AlertDialog>
     )
 }

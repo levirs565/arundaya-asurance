@@ -22,16 +22,28 @@ export function PremiPage() {
 
     return (
         <div className='container'>
-            <Card className='mt-5 ms-5 mb-5 w-[350px]'>
-                <CardHeader>
-                    <CardTitle>Bayar Premi</CardTitle>
-                </CardHeader>
-                <CardContent>
-                    <PremiPay>
-                        <Button>Bayar disini</Button>
-                    </PremiPay>
-                </CardContent>
-            </Card>
+            <div className='flex'>
+                <Card className='mt-5 ms-5 mb-5 w-[350px]'>
+                    <CardHeader>
+                        <CardTitle>Bayar Premi</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <PremiPay>
+                            <Button>Bayar disini</Button>
+                        </PremiPay>
+                    </CardContent>
+                </Card>
+                <Card className='mt-5 ms-5 mb-5 w-[350px]'>
+                    <CardHeader>
+                        <CardTitle>Upgrade Kelas Premi</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <PremiPay>
+                            <Button>Upgrade disini</Button>
+                        </PremiPay>
+                    </CardContent>
+                </Card>
+            </div>
 
             <div className="p-4">
                 <PremiHistory/>
