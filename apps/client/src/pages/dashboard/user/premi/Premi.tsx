@@ -1,8 +1,7 @@
 import { useState } from 'react';
 import { Input } from '@client/components/ui/input';
 import { Button } from '@client/components/ui/button';
-import { PremiPay } from '@client/pages/dashboard/PremiPay'
-import { PremiHistory } from '@client/pages/dashboard/PremiHistory'
+
 import {
     Card,
     CardContent,
@@ -11,9 +10,16 @@ import {
     CardHeader,
     CardTitle,
   } from "@client/components/ui/card"
-  
+import { usePremiList } from '@client/api/premi'
+import { format } from "date-fns";
+import { Badge, BadgeProps } from "@client/components/ui/badge";
+import { Check, Loader, X } from "lucide-react";
+import { PremiPay } from './PremiPay';
+import { PremiHistory } from './PremiHistory';
 
 export function PremiPage() {
+    const { data } = usePremiList();
+
     return (
         <div className='container'>
             <Card className='mt-5 ms-5 mb-5 w-[350px]'>
@@ -21,14 +27,14 @@ export function PremiPage() {
                     <CardTitle>Bayar Premi</CardTitle>
                 </CardHeader>
                 <CardContent>
-                    <PremiPay />
+                    <PremiPay>
+                        <Button>Bayar disini</Button>
+                    </PremiPay>
                 </CardContent>
             </Card>
 
-            <div className='ShowHistory mt-5 ms-5 mb-5'>
-                <h1 className='mb-5'>Histori </h1>
+            <div className="p-4">
                 <PremiHistory/>
-                <PremiHistory />
             </div>
         </div>
     );
