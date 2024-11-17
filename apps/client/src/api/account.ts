@@ -19,3 +19,9 @@ export const useAccountLogout = () => useSWRMutation(
     accountStatePath,
     () => post("/account/logout", undefined)
 )
+
+export const useAccountData = () => useSWR("/account/data", fetcher);
+
+export const useUpdateAccountData = () => useSWRMutation("/account/data", 
+    (key, {arg}) => post(key, arg)
+)
