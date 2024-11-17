@@ -20,7 +20,7 @@ const claimStateMessages: Record<ClaimState, string> = {
 const claimStateVarians: Record<ClaimState, BadgeProps["variant"]> = {
     "NOT_ASSIGNED": "secondary",
     "ASSIGNED": "default",
-    "ACCEPTED": "default",
+    "ACCEPTED": "success",
     "REJECTED": "destructive"
 }
 
