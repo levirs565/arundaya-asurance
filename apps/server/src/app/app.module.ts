@@ -13,10 +13,12 @@ import { AccountTypeGuard } from '../common/account-type.guard';
 import { ClaimModule } from '../claim/claim.module';
 import { ClaimEmployeeModule } from '../claim-employee/claim-employee.module';
 import { AdminEmployeeModule } from '../admin-employee/admin-employee.module';
+import { ScheduleModule } from "@nestjs/schedule";
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
+    ScheduleModule.forRoot(),
     PrismaModule,
     AccountModule,
     ClaimModule,

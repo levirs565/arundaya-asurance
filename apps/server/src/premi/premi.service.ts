@@ -4,6 +4,7 @@ import { CommonServiceException } from "../common/common-service.exception";
 import { PrismaService } from "../prisma/prisma.service";
 import { startOfMonth } from "date-fns"
 import { AccountData } from "../types/account";
+import { Cron } from "@nestjs/schedule";
 
 @Injectable()
 export class PremiService {
@@ -19,6 +20,20 @@ export class PremiService {
                 state: PremiState.SUCCESS
             }
         }) > 0;
+    }
+
+    async cancel(account: AccountData, id: number) {
+        const premi = await this.get(account, id);
+
+        if (premi.state != PremiState.PENDING) {
+            throw new CommonServiceException("Premi is not pending");
+        }
+
+        await this.prismaClient.premi.delete({
+            where: {
+                id: premi.id
+            }
+        })
     }
 
     async pay(account: AccountData): Promise<number> {
@@ -80,6 +95,38 @@ export class PremiService {
             },
             orderBy: {
                 date: "desc"
+            }
+        })
+    }
+
+    @Cron("*/30 * * * * *")
+    private async updatePremiState() {
+        const firstPendingPremi = await this.prismaClient.premi.findFirst({
+            where: {
+                state: PremiState.PENDING
+            },
+            orderBy: {
+                date: "asc"
+            },
+            select: {
+                userNik: true,
+                id: true
+            }
+        });
+
+        if (!firstPendingPremi) {
+            return;
+        }
+
+        const random = Math.random();
+        const state = random >= 0.5 ? PremiState.SUCCESS : PremiState.FAIL;
+
+        await this.prismaClient.premi.update({
+            where: {
+                id: firstPendingPremi.id,
+            },
+            data: {
+                state
             }
         })
     }

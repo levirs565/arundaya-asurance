@@ -1,9 +1,10 @@
-import { Controller, Get, Param, ParseIntPipe, Post, Session } from "@nestjs/common";
+import { Controller, Delete, Get, Param, ParseIntPipe, Post, Session, UseInterceptors } from "@nestjs/common";
 import { PremiService } from "./premi.service";
-import { SessionData } from "express-session";
+import session, { SessionData } from "express-session";
 import { HasPaidPremiResultDto, PayPremiResultDto, PremiListDto } from "../types/premi";
 import { Premi } from "@prisma/client";
 import { AllowedAccountType } from "../common/account-type.guard";
+import { ActionInterceptor } from "../common/action.interceptor";
 
 @Controller()
 @AllowedAccountType("USER")
@@ -34,5 +35,11 @@ export class PremiController {
     @Get("/:id")
     async get(@Session() session: SessionData, @Param("id", ParseIntPipe) id: number): Promise<Premi> {
         return await this.premiService.get(session.account, id);
+    }
+
+    @Delete("/:id")
+    @UseInterceptors(ActionInterceptor)
+    async cancel(@Session() session: SessionData, @Param("id", ParseIntPipe) id: number) {
+        await this.premiService.cancel(session.account, id);
     }
 }

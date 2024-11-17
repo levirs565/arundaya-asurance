@@ -12,6 +12,7 @@
     "@nestjs/config": "^3.3.0",
     "@nestjs/core": "^10.0.2",
     "@nestjs/platform-express": "^10.0.2",
+    "@nestjs/schedule": "^4.1.1",
     "@prisma/client": "^5.21.1",
     "@quixo3/prisma-session-store": "^3.1.13",
     "@radix-ui/react-alert-dialog": "^1.1.2",

@@ -11,8 +11,13 @@ import { AdminEmployeePage } from "./pages/dashboard/admin/employee/Employee";
 import { ClaimAvailable } from "./pages/dashboard/employe/claim-available/ClaimAvailable";
 import { ClaimAssigned } from "./pages/dashboard/employe/claim-assigned/ClaimAssigned";
 import { ClaimAddReview } from "./pages/dashboard/employe/claim-add-review/ClaimAddReview";
+import { HomePage } from "./pages/home/Home";
 
 export const router = createBrowserRouter([
+    {
+        path: "/",
+        element: <HomePage/>
+    },
     {
         path: "/login",
         element: <AccountTypeGuard allowed="NOTLOGGED" redirectTo="/dashboard">
