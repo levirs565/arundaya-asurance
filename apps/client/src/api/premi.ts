@@ -1,5 +1,5 @@
 import useSWR from "swr";
-import { fetcher, post } from "./common";
+import { fetcher, httpDelete, post } from "./common";
 import useSWRMutation from "swr/mutation";
 
 export const usePremiHasPaid = () => useSWR("/premi/has-paid", fetcher);
@@ -13,3 +13,7 @@ export const usePremiPay = () => useSWRMutation(
 
 export const usePremiList = () => useSWR(premiListKey, fetcher);
 export const usePremiById = (id: number) => useSWR(`/premi/${id}`, fetcher); 
+export const usePremiCancel = (id: number) => useSWRMutation(
+    premiListKey,
+    (key, { arg }) => httpDelete(`premi/${id}`)
+)

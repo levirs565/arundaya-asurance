@@ -30,7 +30,9 @@ export class PremiService {
         }
 
         await this.prismaClient.premi.delete({
-            where: premi.id
+            where: {
+                id: premi.id
+            }
         })
     }
 
