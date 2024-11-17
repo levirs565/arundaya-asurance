@@ -12,6 +12,7 @@ import {
   DropdownMenuTrigger,
 } from "@client/components/ui/dropdown-menu"
 import { useAccountLogout, useAccountState } from "@client/api/account"
+import { Link } from "react-router-dom"
 
 
 export function AccountAction() {
@@ -40,6 +41,12 @@ export function AccountAction() {
             className="w-[--radix-dropdown-menu-trigger-width]"
             align="start">
               
+              <DropdownMenuItem asChild>
+                <Link to="/dashboard/account">
+                Akun
+                </Link>
+              </DropdownMenuItem>
+
               <DropdownMenuItem onClick={() => trigger()} disabled={isMutating}>
                 Logout
               </DropdownMenuItem>

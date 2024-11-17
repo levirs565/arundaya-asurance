@@ -1,4 +1,4 @@
-import { AccountType, Day, UserClass } from "@prisma/client";
+import { AccountType, ClassData, Day, UserClass } from "@prisma/client";
 
 export interface AccountData {
     id: string;
@@ -74,7 +74,7 @@ export interface AccountDataDto {
         job: string
         income: number
         motherName: string
-        subscriptionClass: UserClass
+        subscriptionClass: ClassData
     }
 }
 
