@@ -9,44 +9,51 @@ import {
     CardFooter,
     CardHeader,
     CardTitle,
-  } from "@client/components/ui/card"
+} from "@client/components/ui/card"
 import { usePremiList } from '@client/api/premi'
 import { format } from "date-fns";
 import { Badge, BadgeProps } from "@client/components/ui/badge";
 import { Check, Loader, X } from "lucide-react";
 import { PremiPay } from './PremiPay';
 import { PremiHistory } from './PremiHistory';
+import { AppBar, AppBarTitle } from '@client/components/app-bar';
+import { SidebarTrigger } from '@client/components/ui/sidebar';
 
 export function PremiPage() {
     const { data } = usePremiList();
 
     return (
-        <div className='container'>
-            <div className='flex'>
-                <Card className='mt-5 ms-5 mb-5 w-[350px]'>
-                    <CardHeader>
-                        <CardTitle>Bayar Premi</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                        <PremiPay>
-                            <Button>Bayar disini</Button>
-                        </PremiPay>
-                    </CardContent>
-                </Card>
-                <Card className='mt-5 ms-5 mb-5 w-[350px]'>
-                    <CardHeader>
-                        <CardTitle>Upgrade Kelas Premi</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                        <PremiPay>
-                            <Button>Upgrade disini</Button>
-                        </PremiPay>
-                    </CardContent>
-                </Card>
-            </div>
+        <div>
+            <AppBar>
+                <SidebarTrigger/>
+                <AppBarTitle>Premi</AppBarTitle>
+            </AppBar>
 
-            <div className="p-4">
-                <PremiHistory/>
+            <div className='p-4'>
+                <div className='flex flex-col gap-4 lg:flex-row mb-4'>
+                    <Card className='grow basis-full'>
+                        <CardHeader>
+                            <CardTitle>Bayar Premi</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            <PremiPay>
+                                <Button>Bayar disini</Button>
+                            </PremiPay>
+                        </CardContent>
+                    </Card>
+                    <Card className='grow basis-full'>
+                        <CardHeader>
+                            <CardTitle>Upgrade Kelas Premi</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            <PremiPay>
+                                <Button>Upgrade disini</Button>
+                            </PremiPay>
+                        </CardContent>
+                    </Card>
+                </div>
+
+                <PremiHistory />
             </div>
         </div>
     );
