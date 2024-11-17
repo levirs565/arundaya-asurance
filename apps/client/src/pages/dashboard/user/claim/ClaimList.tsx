@@ -20,7 +20,7 @@ const claimStateMessages: Record<ClaimState, string> = {
 const claimStateVarians: Record<ClaimState, BadgeProps["variant"]> = {
     "NOT_ASSIGNED": "secondary",
     "ASSIGNED": "default",
-    "ACCEPTED": "default",
+    "ACCEPTED": "success",
     "REJECTED": "destructive"
 }
 
@@ -43,7 +43,7 @@ function Claim({ data }: { data: any }) {
     return <Card>
         <CardHeader>
             <CardTitle>{data.type}</CardTitle>
-            <CardDescription>
+            <CardDescription className="flex flex-row items-center">
                 {format(data.date, "dd MMMM yyyy")}
                 <Badge className="ml-2" variant={claimStateVarians[data.state as ClaimState]}>
                     {claimStateIcons[data.state as ClaimState]}

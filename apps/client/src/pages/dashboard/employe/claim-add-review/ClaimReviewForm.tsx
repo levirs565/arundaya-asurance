@@ -9,6 +9,7 @@ import { Textarea } from "@client/components/ui/textarea";
 import { Button } from "@client/components/ui/button";
 import { ErrorLabel } from "@client/components/label";
 import { useNavigate } from "react-router-dom";
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@client/components/ui/card";
 
 const schema = z.object({
     message: z.string().min(1)
@@ -25,7 +26,7 @@ function ClaimMessageForm({ data }: { data: any }) {
         }
 
         return {
-            message: data.reviewMessage
+            message: data.reviewMessage || ""
         }
     }, [data]);
 
@@ -105,54 +106,67 @@ export function ClaimReviewForm({ id }: { id: number }) {
 
     if (!data) return <></>;
 
-    return <div className="space-y-2">
+    return <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <Card>
+            <CardHeader>
+                <CardTitle>Identitas</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-2">
+                <p className="text-sm font-bold">Nama </p>
+                <p>{data.user.name}</p>
 
-        <h2 className="text-lg font-semibold">Identitas</h2>
+                <p className="text-sm font-bold">Umur </p>
+                <p>{differenceInYears(new Date(), new Date(data.user.birthDate))} Tahun</p>
 
-        <p className="text-sm font-bold">Nama </p>
-        <p>{data.user.name}</p>
+                <p className="text-sm font-bold">Pekerjaan</p>
+                <p>{data.user.job}</p>
 
-        <p className="text-sm font-bold">Umur </p>
-        <p>{differenceInYears(new Date(), new Date(data.user.birthDate))} Tahun</p>
+                <p className="text-sm font-bold">Tanggal Lahir</p>
+                <p>{format(data.user.birthDate, "dd MMMM yyyy")}</p>
 
-        <p className="text-sm font-bold">Pekerjaan</p>
-        <p>{data.user.job}</p>
+                <p className="text-sm font-bold">Nomor Induk Kepemilikan(NIK)</p>
+                <p>{data.user.nik}</p>
 
-        <p className="text-sm font-bold">Tanggal Lahir</p>
-        <p>{format(data.user.birthDate, "dd MMMM yyyy")}</p>
+                <p className="text-sm font-bold">Nama Ibu</p>
+                <p>{data.user.motherName}</p>
 
-        <p className="text-sm font-bold">Nomor Induk Kepemilikan(NIK)</p>
-        <p>{data.user.nik}</p>
+                <p className="text-sm font-bold">Pengahsilan</p>
+                <p>{data.user.income}</p>
 
-        <p className="text-sm font-bold">Nama Ibu</p>
-        <p>{data.user.motherName}</p>
+                <p className="text-sm font-bold">Kelas</p>
+                <p>{data.user.subscriptionClass}</p>
+            </CardContent>
+        </Card>
 
-        <p className="text-sm font-bold">Pengahsilan</p>
-        <p>{data.user.income}</p>
+        <Card>
+            <CardHeader>
+                <CardTitle>Data Klaim</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-2">
+                <p className="text-sm font-bold">Jenis</p>
+                <p>{data.type}</p>
 
-        <p className="text-sm font-bold">Kelas</p>
-        <p>{data.user.subscriptionClass}</p>
+                <p className="text-sm font-bold">Tanggal</p>
+                <p>{format(data.date, "dd MMMM yyyy")}</p>
 
+                <p className="text-sm font-bold">Rumah Sakit</p>
+                <p>{data.hospital}</p>
 
-        <h2 className="text-lg font-semibold pt-4">Data Klaim</h2>
+                <p className="text-sm font-bold mt-4">Deskripsi</p>
+                <p>{data.description}</p>
+            </CardContent>
+        </Card>
 
-        <p className="text-sm font-bold">Jenis</p>
-        <p>{data.type}</p>
-
-        <p className="text-sm font-bold">Tanggal</p>
-        <p>{format(data.date, "dd MMMM yyyy")}</p>
-
-        <p className="text-sm font-bold">Rumah Sakit</p>
-        <p>{data.hospital}</p>
-
-        <p className="text-sm font-bold mt-4">Deskripsi</p>
-        <p>{data.description}</p>
-
-        <h2 className="text-lg font-semibold pt-4">Data Review</h2>
-
-        <ClaimMessageForm data={data} />
-
-
-        <ClaimAction id={data.id} />
+        <Card className="lg:col-span-2">
+            <CardHeader>
+                <CardTitle>Review</CardTitle>
+            </CardHeader>
+            <CardContent>
+                <ClaimMessageForm data={data} />
+            </CardContent>
+            <CardFooter>
+                <ClaimAction id={data.id} />
+            </CardFooter>
+        </Card>
     </div>
 }
