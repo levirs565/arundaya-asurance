@@ -11,7 +11,7 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
     AlertDialogTrigger,
-  } from "@client/components/ui/alert-dialog"
+} from "@client/components/ui/alert-dialog"
 import { Label } from "@client/components/ui/label"
 import { Button } from '@client/components/ui/button';
 import { usePremiUpgrade } from '@client/api/premi'
@@ -22,21 +22,20 @@ import {
     DropdownMenuLabel,
     DropdownMenuSeparator,
     DropdownMenuTrigger,
-  } from "@client/components/ui/dropdown-menu"
+} from "@client/components/ui/dropdown-menu"
 import { useUserClassList } from '@client/api/user-class';
-import { Select, SelectContent, SelectGroup, SelectItem } from '@client/components/ui/select';
-import { SelectTrigger, SelectValue } from '@radix-ui/react-select';
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@client/components/ui/select';
 
 export function PremiUpgradeDialog() {
     const [open, setOpen] = useState(false);
     const { data: userData } = useAccountData();
     const { trigger, isMutating, error, reset } = usePremiUpgrade();
     const { data: classList } = useUserClassList();
-    const [selectedClass, setSelectedClass] = useState();
+    const [selectedClass, setSelectedClass] = useState<string>();
 
     console.log(classList);
-    
-    function onSelect(data: any) {
+
+    function onSubmit(data: any) {
         trigger({
             to: selectedClass
         } as any, {
@@ -45,36 +44,38 @@ export function PremiUpgradeDialog() {
             }
         })
     }
-    if(!userData) {
+
+    if (!userData) {
         return <></>
     }
     return (
         <div>
-            <AlertDialog>
-                <AlertDialogTrigger>
+            <AlertDialog open={open} onOpenChange={setOpen}>
+                <AlertDialogTrigger asChild>
                     <Button>Upgrade Kelas</Button>
                 </AlertDialogTrigger>
                 <AlertDialogContent>
                     <AlertDialogHeader>
-                    <AlertDialogTitle>Kelas saat ini: {userData.user.subscriptionClass}</AlertDialogTitle>
+                        <AlertDialogTitle>Kelas saat ini: {userData.user.subscriptionClass.name}</AlertDialogTitle>
 
-                    <AlertDialogDescription> 
-                        <Select>
-                            <SelectTrigger>
-                                <SelectValue placeholder="Daftar Kelas" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectGroup>
-                                {classList && classList.map(x => 
-                                    <SelectItem key={x.name} value={x.name}
-                                    onSelect={selectedClass}>A</SelectItem>
-                                )}
-                                </SelectGroup>
-                            </SelectContent>
-                        </Select>
-                    </AlertDialogDescription>
+                        <AlertDialogDescription>
+                            <Select value={selectedClass} onValueChange={setSelectedClass}>
+                                <SelectTrigger>
+                                    <SelectValue placeholder="Daftar Kelas" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    {classList && classList.map((x:any) =>
+                                        <SelectItem key={x.name} value={x.name}
+                                        >{x.name}</SelectItem>
+                                    )}
+                                </SelectContent>
+                            </Select>
+                        </AlertDialogDescription>
                     </AlertDialogHeader>
+                    {error && <ErrorLabel text={error.message} />}
                     <AlertDialogFooter>
+                        <Button onClick={() => setOpen(false)}>Batal</Button>
+                        <Button onClick={ onSubmit }>Lanjut</Button>
                     </AlertDialogFooter>
                 </AlertDialogContent>
             </AlertDialog>
