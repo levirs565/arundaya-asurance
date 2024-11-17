@@ -12,6 +12,7 @@ import { ClaimAvailable } from "./pages/dashboard/employe/claim-available/ClaimA
 import { ClaimAssigned } from "./pages/dashboard/employe/claim-assigned/ClaimAssigned";
 import { ClaimAddReview } from "./pages/dashboard/employe/claim-add-review/ClaimAddReview";
 import { HomePage } from "./pages/home/Home";
+import { AccountPage } from "./pages/dashboard/account/Account";
 
 export const router = createBrowserRouter([
     {
@@ -36,6 +37,12 @@ export const router = createBrowserRouter([
             <DashboardPage />
         </AccountTypeGuard>,
         children: [
+            {
+                path: "account",
+                element: <AccountTypeGuard allowed="LOGGED" redirectTo="/login">
+                    <AccountPage/>
+                </AccountTypeGuard>
+            },
             {
                 path: "user/claim",
                 element: <AccountTypeGuard allowed="USER" redirectTo="/dashboard">

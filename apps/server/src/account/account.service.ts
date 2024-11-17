@@ -32,7 +32,7 @@ export class AccountService {
             job: true,
             income: true,
             motherName: true,
-            subscriptionClass: true
+            subscriptionClassData: true
           }
         }
       }
@@ -57,7 +57,7 @@ export class AccountService {
         income: data.user.income,
         job: data.user.job,
         motherName: data.user.motherName,
-        subscriptionClass: data.user.subscriptionClass
+        subscriptionClass: data.user.subscriptionClassData
       }
 
       return res;

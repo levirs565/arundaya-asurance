@@ -2,7 +2,7 @@ import { cn } from "@client/lib/utils";
 import { useEffect, useRef, useState } from "react"
 import { SidebarTrigger } from "./ui/sidebar";
 
-export function AppBar({ children }: { children: any }) {
+export function AppBar({ children, className }: { children: any, className?: string }) {
     const [colorClass, setColorClass] = useState("");
 
     useEffect(() => {
@@ -17,7 +17,7 @@ export function AppBar({ children }: { children: any }) {
         }
     });
 
-    return <div className={cn("flex flex-row items-center gap-4 p-4 h-16 sticky top-0 bg-white duration-200 transition-shadow", colorClass)}>
+    return <div className={cn("flex flex-row items-center gap-4 p-4 h-16 sticky top-0 bg-white duration-200 transition-shadow", colorClass, className)}>
         {children}
     </div>
 }
