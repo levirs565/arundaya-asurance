@@ -1,7 +1,7 @@
-import { Controller, Delete, Get, Param, ParseIntPipe, Post, Session, UseInterceptors } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Session, UseInterceptors } from "@nestjs/common";
 import { PremiService } from "./premi.service";
 import session, { SessionData } from "express-session";
-import { HasPaidPremiResultDto, PayPremiResultDto, PremiListDto } from "../types/premi";
+import { HasPaidPremiResultDto, PayPremiResultDto, PremiListDto, UpgradePremiRequestDto, UpgradePremiResultDto } from "../types/premi";
 import { Premi } from "@prisma/client";
 import { AllowedAccountType } from "../common/account-type.guard";
 import { ActionInterceptor } from "../common/action.interceptor";
@@ -22,6 +22,13 @@ export class PremiController {
     async pay(@Session() session: SessionData): Promise<PayPremiResultDto> {
         return {
             id: await this.premiService.pay(session.account)
+        }
+    }
+
+    @Post("/upgrade")
+    async updgrade(@Session() session: SessionData, @Body() body: UpgradePremiRequestDto): Promise<UpgradePremiResultDto> {
+        return {
+            id: await this.premiService.upgrade(session.account, body.to)
         }
     }
 

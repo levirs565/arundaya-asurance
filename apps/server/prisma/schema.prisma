@@ -85,7 +85,7 @@ model Claim {
   hospital      String
   type          String
   state         ClaimState
-  reviewMessage String?     @db.LongText
+  reviewMessage String?    @db.LongText
 }
 
 enum PremiState {
@@ -95,12 +95,13 @@ enum PremiState {
 }
 
 model Premi {
-  id      Int        @id @default(autoincrement())
-  date    DateTime   @default(now())
-  userNik String
-  user    User       @relation(fields: [userNik], references: [nik])
-  amount  Int
-  state   PremiState
+  id        Int        @id @default(autoincrement())
+  date      DateTime   @default(now())
+  userNik   String
+  user      User       @relation(fields: [userNik], references: [nik])
+  amount    Int
+  state     PremiState
+  upgradeTo UserClass?
 }
 
 model Session {

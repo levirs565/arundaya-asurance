@@ -1,5 +1,5 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
-import { Premi, PremiState } from "@prisma/client";
+import { Premi, PremiState, UserClass } from "@prisma/client";
 import { CommonServiceException } from "../common/common-service.exception";
 import { PrismaService } from "../prisma/prisma.service";
 import { startOfMonth } from "date-fns"
@@ -36,11 +36,7 @@ export class PremiService {
         })
     }
 
-    async pay(account: AccountData): Promise<number> {
-        if (await this.hasPaid(account)) {
-            throw new CommonServiceException("Has pay for this month")
-        }
-
+    async validateNoPendingPremi(account: AccountData) {
         if (await this.prismaClient.premi.count({
             where: {
                 userNik: account.nik,
@@ -49,7 +45,49 @@ export class PremiService {
         }) > 0) {
             throw new CommonServiceException("You have pending premi");
         }
+    }
 
+    async upgrade(account: AccountData, to: UserClass) {
+        await this.validateNoPendingPremi(account);
+
+        const user = await this.prismaClient.user.findUnique({
+            where: {
+                nik: account.nik
+            },
+            select: {
+                subscriptionClassData: true
+            }
+        })
+        const toPremiData = await this.prismaClient.classData.findUnique({
+            where: {
+                name: to
+            }
+        })
+
+        if (toPremiData.premiAmount <= user.subscriptionClassData.premiAmount) {
+            throw new CommonServiceException("Cannot downgrade");
+        }
+
+        const hasPaid = await this.hasPaid(account);
+
+        const premi = await this.prismaClient.premi.create({
+            data: {
+                userNik: account.nik,
+                state: PremiState.PENDING,
+                amount: toPremiData.premiAmount - (hasPaid ? user.subscriptionClassData.premiAmount : 0),
+                upgradeTo: to
+            }
+        });
+
+        return premi.id;
+    }
+
+    async pay(account: AccountData): Promise<number> {
+        if (await this.hasPaid(account)) {
+            throw new CommonServiceException("Has pay for this month")
+        }
+
+        await this.validateNoPendingPremi(account);
         const user = await this.prismaClient.user.findUnique({
             where: {
                 nik: account.nik
@@ -110,7 +148,8 @@ export class PremiService {
             },
             select: {
                 userNik: true,
-                id: true
+                id: true,
+                upgradeTo: true
             }
         });
 
@@ -129,5 +168,16 @@ export class PremiService {
                 state
             }
         })
+
+        if (firstPendingPremi.upgradeTo && state == PremiState.SUCCESS) {
+            await this.prismaClient.user.update({
+                where: {
+                    nik: firstPendingPremi.userNik
+                },
+                data: {
+                    subscriptionClass: firstPendingPremi.upgradeTo
+                }
+            })
+        }
     }
 }
